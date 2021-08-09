@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+      "skipLibCheck": true,
+      "target": "es6",
+      "module": "commonjs",
+      "rootDir": "./",
+      "esModuleInterop": true,
+      "strict": true,
+      "outDir": "./dist",
+      "jsx": "react"
+    },
+  }

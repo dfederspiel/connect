@@ -1,0 +1,26 @@
+generator client {
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native", "linux-musl"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  domain    String?
+  Profile   Profile?
+}
+
+model Profile {
+  id         Int     @id @default(autoincrement())
+  name       String?
+  givenName  String?
+  familyName String?
+  picture    String?
+  userId     Int?    @unique
+  User       User?   @relation(fields: [userId], references: [id])
+}

@@ -1,0 +1,73 @@
+version: "3.3"
+services:
+  redis:
+    image: "redis:latest"
+  graphql:
+    image: codefly.azurecr.io/graphql:latest
+    environment:
+      DATABASE_URL: postgres://user:postgres@postgres:5432/db
+      B2C_AUTHORITY: https://codeflyb2c.b2clogin.com/codeflyb2c.onmicrosoft.com
+      B2C_LOGIN_POLICY: B2C_1_CASpR
+      REDIS_HOST: redis
+    build:
+      context: .
+      dockerfile: docker/graphql/Dockerfile
+    depends_on:
+      - postgres
+    links: 
+      - postgres
+    volumes:
+      - ./prisma:/usr/src/app/prisma
+      - ./graphql:/usr/src/app/graphql
+    ports:
+      - 8080:4000
+    command: [bash, -c, "cd graphql && yarn start"]
+  api:
+    image: codefly.azurecr.io/api:latest
+    environment:
+      DATABASE_URL: postgres://user:postgres@postgres:5432/db
+      B2C_APPLICATION_ID: 2b08acb3-4c70-4b1f-8925-b00158883f1a
+      B2C_KNOWN_AUTHORITIES: codeflyb2c.b2clogin.com
+    build:
+      context: .
+      dockerfile: docker/api/Dockerfile
+    depends_on:
+      - postgres
+    links: 
+      - postgres
+    volumes:
+      - ./prisma:/usr/src/app/prisma
+      - ./api/src:/usr/src/app/api/src
+    ports:
+      - 8081:3000
+    command: [bash, -c, "prisma migrate deploy --preview-feature && cd api && yarn start"]
+  www:
+    image: codefly.azurecr.io/www:latest
+    build:
+      context: .
+      dockerfile: docker/www/Dockerfile
+    volumes:
+      - ./www/src:/usr/src/app/www/src
+    ports:
+      - 80:8080
+    links:
+      - graphql
+    depends_on:
+      - graphql
+    command: [bash, -c, "cd www && yarn start"]
+  postgres:
+    image: codefly.azurecr.io/postgres:latest
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: db
+    build:
+      context: .
+      dockerfile: docker/postgres/Dockerfile
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5432"]
+      interval: 30s
+      timeout: 10s
+      retries: 5

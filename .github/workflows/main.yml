@@ -1,0 +1,29 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: yarn install
+      - run: yarn setup
+      - run: yarn lint
+      - run: docker build . -t codefly.azurecr.io/www:latest --file ./docker/www/Dockerfile
+      - run: docker build . -t codefly.azurecr.io/graphql:latest --file ./docker/graphql/Dockerfile
+      - run: docker build . -t codefly.azurecr.io/api:latest --file ./docker/api/Dockerfile
