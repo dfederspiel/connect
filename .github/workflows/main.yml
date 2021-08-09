@@ -7,14 +7,12 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
-
+  
+  lint:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [14.x]
-
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
@@ -24,6 +22,21 @@ jobs:
       - run: yarn install
       - run: yarn setup
       - run: yarn lint
+  
+  build-www:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
       - run: docker build . -t codefly.azurecr.io/www:latest --file ./docker/www/Dockerfile
-      - run: docker build . -t codefly.azurecr.io/graphql:latest --file ./docker/graphql/Dockerfile
-      - run: docker build . -t codefly.azurecr.io/api:latest --file ./docker/api/Dockerfile
+
+  build-api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - run: docker build . -t codefly.azurecr.io/www:latest --file ./docker/api/Dockerfile
+
+  build-graphql:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - run: docker build . -t codefly.azurecr.io/www:latest --file ./docker/graphql/Dockerfile
