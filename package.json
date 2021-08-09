@@ -33,6 +33,7 @@
     "setup:www": "cd www && yarn install",
     "setup:graphql": "cd graphql && yarn install",
     "setup:api": "cd api && yarn install",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "generate": "prisma generate"
   }
 }
