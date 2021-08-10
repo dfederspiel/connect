@@ -51,4 +51,4 @@ That's it, you can start changing files. To be sure all is well, though, you can
 * Prisma ORM - DB and Code generation
 
 # Context
-[Apollo with Auth Context](www/src/context/ApolloAuthContext/README.md)
+[Apollo with Auth Context](www/src/context/ApolloAuthContext/README.md)  
