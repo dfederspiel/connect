@@ -21,7 +21,7 @@
   },
   "scripts": {
     "build": "cross-env TS_NODE_PROJECT=\"./webpack/tsconfig.json\" webpack --config ./webpack/webpack.config.prod.ts",
-    "build:analyze": "cross-env TS_NODE_PROJECT=\"./webpack/tsconfig.json\" webpack --config ./webpack/webpack.config.test.ts",
+    "build:analyze": "cross-env TS_NODE_PROJECT=\"./webpack/tsconfig.json\" webpack --config ./webpack/webpack.config.analyze.ts",
     "start": "cross-env TS_NODE_PROJECT=\"./webpack/tsconfig.json\" webpack serve --open --config ./webpack/webpack.config.dev.ts --host=0.0.0.0",
     "start:production": "cross-env ts-node ./index.ts",
     "test": "jest --maxWorkers=50% --detectOpenHandles",
