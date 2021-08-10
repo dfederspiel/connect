@@ -8,7 +8,7 @@ on:
 
 jobs:
   
-  lint:
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -22,6 +22,7 @@ jobs:
       - run: yarn install
       - run: yarn setup
       - run: yarn lint
+      - run: yarn test
   
   build-www:
     runs-on: ubuntu-latest
