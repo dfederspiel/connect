@@ -5,6 +5,7 @@ RUN npm install -g typescript nodemon ts-node prisma
 WORKDIR /usr/src/app
 
 COPY ./package.json .
+COPY ./yarn.lock .
 COPY ./prisma ./prisma
 RUN yarn install
 COPY ./www ./www

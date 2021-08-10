@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "skipLibCheck": true,
-    "target": "ES2021",
+    "target": "es6",
     "module": "commonjs",
     "rootDir": "./",
     "esModuleInterop": true,
