@@ -2,10 +2,10 @@ import { createServer } from 'http';
 
 import express from 'express';
 import cors from 'cors';
-import GraphQLServer from './server';
+import GraphQLServer from './src/server';
 
 import { RedisPubSub } from 'graphql-redis-subscriptions';
-import { DataMocks } from './mocks';
+import { DataMocks } from './src/mocks';
 
 const pubsub = new RedisPubSub({
   connection: {

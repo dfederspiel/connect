@@ -9,8 +9,8 @@ export interface IUserDataContext extends IDataContext<User> {
 export default class UserDataContext implements IUserDataContext {
   client: PrismaClient;
 
-  constructor() {
-    this.client = new PrismaClient();
+  constructor(context: PrismaClient) {
+    this.client = context;
   }
 
   async createUser(email: string): Promise<User> {
@@ -43,11 +43,5 @@ export default class UserDataContext implements IUserDataContext {
     return await this.client.user.create({
       data: item,
     });
-  }
-  async delete(id: string): Promise<User> {
-    throw new Error('Method not implemented.');
-  }
-  async put(item: User): Promise<User> {
-    throw new Error('Method not implemented.');
   }
 }
