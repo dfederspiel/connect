@@ -4,7 +4,7 @@ import { ApolloAuthProvider } from '../context/ApolloAuthContext/ApolloAuthConte
 import { SnackBarProvider } from '../context/AlertContext/SnackBarProvider';
 import AppView from './AppView';
 
-function App() {
+const App = (): JSX.Element => {
   return (
     <SnackBarProvider>
       <AuthProvider>
@@ -14,6 +14,6 @@ function App() {
       </AuthProvider>
     </SnackBarProvider>
   );
-}
+};
 
 export default App;
