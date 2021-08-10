@@ -18,7 +18,7 @@ services:
       - postgres
     volumes:
       - ./prisma:/usr/src/app/prisma
-      - ./graphql:/usr/src/app/graphql
+      - ./graphql/src:/usr/src/app/graphql/src
     ports:
       - 8080:4000
     command: [bash, -c, "cd graphql && yarn start"]
