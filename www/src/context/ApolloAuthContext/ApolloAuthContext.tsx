@@ -1,4 +1,3 @@
-import React from 'react';
 import { useProvideApolloAuth } from './useProvideApolloAuth';
 import { ApolloProvider } from '@apollo/client';
 

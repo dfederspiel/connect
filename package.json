@@ -40,6 +40,7 @@
     "setup:api": "cd api && yarn install",
     "lint": "eslint .",
     "generate": "prisma generate",
-    "test": "jest --coverage --runInBand"
+    "test": "jest --coverage --runInBand --watchAll --verbose",
+    "test:ci": "jest --coverage --runInBand"
   }
 }
