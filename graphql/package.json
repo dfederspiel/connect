@@ -2,8 +2,8 @@
   "name": "graphql",
   "version": "1.0.0",
   "scripts": {
-    "start": "nodemon ./index.ts",
-    "start:production": "ts-node ./index.ts",
+    "start": "nodemon ./src/index.ts",
+    "start:production": "ts-node ./src/index.ts",
     "prisma": "prisma generate --schema=../prisma/schema.prisma"
   },
   "author": "David Federspiel",
