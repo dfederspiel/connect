@@ -72,37 +72,10 @@ const AppView = () => {
                 </ListItemIcon>
                 <ListItemText primary="Home" />
               </ListItem>
-              {/* <ListItem button onClick={handleClose} component={Link} to="/skills">
-                <ListItemIcon>
-                  <ExtensionIcon />
-                </ListItemIcon>
-                <ListItemText primary="Skills" />
-              </ListItem> */}
-              {/* <ListItem button onClick={handleClose} component={Link} to="/affirmations">
-                <ListItemIcon>
-                  <ThumbUpIcon />
-                </ListItemIcon>
-                <ListItemText primary="Affirmations" />
-              </ListItem> */}
-              {/* <ListItem button onClick={handleClose} component={Link} to="/integrations">
-                <ListItemIcon>
-                  <SettingsInputComponentIcon />
-                </ListItemIcon>
-                <ListItemText primary="Integrations" />
-              </ListItem> */}
               <ListItem component={User} />
             </List>
           </Drawer>
           <Switch>
-            {/* <PrivateRoute path="/skills">
-              <SkillsPage />
-            </PrivateRoute> */}
-            {/* <PrivateRoute path="/integrations">
-              <IntegrationsPage />
-            </PrivateRoute>
-            <PrivateRoute path="/affirmations">
-              <AffirmationsPage />
-            </PrivateRoute> */}
             <Route path="/">
               <HomePage />
             </Route>
