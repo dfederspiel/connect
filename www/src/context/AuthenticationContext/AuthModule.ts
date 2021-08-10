@@ -94,12 +94,15 @@ export class AuthModule {
       });
   }
 
-  logout(): void {
-    this.client.logoutRedirect({
-      postLogoutRedirectUri: `${window.location.protocol}//${window.location.host}`,
-      authority: `${process.env.B2C_AUTHORITY}/${process.env.B2C_RESET_POLICY}`,
-    });
-    sessionStorage.clear();
+  async logout(): Promise<void> {
+    this.client
+      .logoutRedirect({
+        postLogoutRedirectUri: `${window.location.protocol}//${window.location.host}`,
+        authority: `${process.env.B2C_AUTHORITY}/${process.env.B2C_RESET_POLICY}`,
+      })
+      .then(() => {
+        console.log('logged out');
+      });
   }
 
   getActiveAccount(): AccountInfo | void {

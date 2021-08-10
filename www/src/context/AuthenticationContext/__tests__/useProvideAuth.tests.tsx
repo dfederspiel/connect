@@ -47,10 +47,8 @@ describe('the auth hook', () => {
     } as AccountInfo;
     act(() => {
       const { result } = renderHook(() => useProvideAuth(authModule));
-      result.current.signin('123');
-      expect(sessionStorage.getItem('currentPolicy')).toEqual('123');
       result.current.signin();
-      expect(sessionStorage.getItem('currentPolicy')).toEqual('');
+      result.current.signin();
       expect(spy).toHaveBeenCalledTimes(2);
     });
   });

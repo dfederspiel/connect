@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { AuthContext } from '../AuthenticationContext/types';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -6,9 +7,7 @@ export interface User {}
 export const useProvideMockAuth = (name?: string): AuthContext => {
   const user = name;
 
-  const signin = async (userPolicyId?: string): Promise<void> => {
-    if (userPolicyId) sessionStorage.setItem('currentPolicy', userPolicyId || '');
-  };
+  const signin = async (): Promise<void> => {};
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   const signout = (): void => {};

@@ -19,7 +19,7 @@ describe('the auth module', () => {
 
       const authModule = new AuthModule(Mode.Client);
       expect(authModule.login).toBeDefined();
-      authModule.login('policy');
+      authModule.login();
 
       expect(spy).toHaveBeenCalledTimes(1);
     });
@@ -37,7 +37,7 @@ describe('the auth module', () => {
 
         const authModule = new AuthModule(Mode.Client);
         expect(authModule.login).toBeDefined();
-        await authModule.login('policy');
+        await authModule.login();
 
         expect(spy1).toHaveBeenCalledTimes(1);
         expect(spy2).toHaveBeenCalledTimes(1);
@@ -55,7 +55,7 @@ describe('the auth module', () => {
 
           const authModule = new AuthModule(Mode.Client);
           expect(authModule.login).toBeDefined();
-          await authModule.login('policy');
+          await authModule.login();
 
           expect(spy1).toHaveBeenCalledTimes(1);
           expect(spy2).toHaveBeenCalledTimes(1);
@@ -119,15 +119,12 @@ describe('the auth module', () => {
     it('logs the user out', async () => {
       jest.clearAllMocks();
       const spy = jest
-        .spyOn(PublicClientApplication.prototype, 'logout')
+        .spyOn(PublicClientApplication.prototype, 'logoutRedirect')
         .mockImplementation(() => Promise.resolve());
-      sessionStorage.setItem('currentPolicy', '123');
       const authModule = new AuthModule(Mode.Client);
       expect(authModule.logout).toBeDefined();
-      await authModule.logout('123');
-
+      authModule.logout();
       expect(spy).toHaveBeenCalledTimes(1);
-      expect(sessionStorage.getItem('currentPolicy')).toBeDefined();
     });
   });
 
@@ -167,7 +164,6 @@ describe('the auth module', () => {
   describe('when the underlying library loads', () => {
     describe('when the response is null', () => {
       beforeEach(() => {
-        jest.clearAllMocks();
         jest
           .spyOn(PublicClientApplication.prototype, 'getAllAccounts')
           .mockImplementation(
@@ -180,6 +176,11 @@ describe('the auth module', () => {
               ] as AccountInfo[],
           );
       });
+
+      afterEach(() => {
+        jest.clearAllMocks();
+      });
+
       it('will retrieve the logged in account from session', async () => {
         const spy = jest
           .spyOn(PublicClientApplication.prototype, 'handleRedirectPromise')

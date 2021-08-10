@@ -3,6 +3,7 @@ import { renderHook } from '@testing-library/react-hooks';
 import { useProvideMockAuth } from '../useProvideMockAuth';
 import { MockAuthProvider } from '../MockAuthProvider';
 import { act } from 'react-dom/test-utils';
+import { PublicClientApplication } from '@azure/msal-browser';
 
 describe('the mocked provider hook', () => {
   const wrapper = ({ children }: any) => (
@@ -24,14 +25,16 @@ describe('the mocked provider hook', () => {
   });
 
   it('tracks a policy id when signing in', () => {
+    const spy = jest
+      .spyOn(PublicClientApplication.prototype, 'logoutRedirect')
+      .mockImplementation(() => Promise.resolve());
     const { result } = renderHook(() => useProvideMockAuth('test'), {
       wrapper,
     });
     expect(result.current.user).toEqual('test');
     act(() => {
-      result.current.signin('my policy');
+      result.current.signin();
     });
-    expect(sessionStorage.getItem('currentPolicy')).toEqual('my policy');
   });
 
   it('does not set the policy if not provided', () => {
@@ -40,9 +43,8 @@ describe('the mocked provider hook', () => {
     });
     expect(result.current.user).toBeDefined();
     act(() => {
-      result.current.signin(undefined);
+      result.current.signin();
     });
-    expect(sessionStorage.getItem('currentPolicy')).toBeNull();
   });
 
   it('can fetch a test token', async () => {
@@ -53,15 +55,15 @@ describe('the mocked provider hook', () => {
     expect(await result.current.token()).toEqual('123');
   });
 
-  it('can signin', async () => {
+  it('can sign in', async () => {
     const { result } = renderHook(() => useProvideMockAuth('test'), {
       wrapper,
     });
     expect(result.current.signin).toBeDefined();
-    expect(await result.current.signin(undefined)).toBeUndefined();
+    expect(await result.current.signin()).toBeUndefined();
   });
 
-  it('can signout', () => {
+  it('can sign out', () => {
     const { result } = renderHook(() => useProvideMockAuth('test'), {
       wrapper,
     });
