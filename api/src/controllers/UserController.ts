@@ -14,7 +14,13 @@ export default class UserController {
     this.router.get(`${this.path}`, this.getAllUsers);
   };
 
-  private getAllUsers = async (req: any, res: { json: (users: User[]) => void }) => {
-    res.json([]);
+  private getAllUsers = async (req: any, res: any) => {
+    res.json([
+      {
+        id: 1,
+        domain: '',
+        email: '',
+      },
+    ]);
   };
 }
