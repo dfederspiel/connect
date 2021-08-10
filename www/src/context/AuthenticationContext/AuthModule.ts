@@ -59,20 +59,20 @@ export class AuthModule {
               redirectUri: `${window.location.protocol}//${window.location.host}`,
             },
           } as PopupRequest)
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-          .catch(() => {});
+          .catch((ex) => {
+            console.log(ex);
+          });
       });
   }
 
   async token(): Promise<string | null> {
     if (!this.account) return null;
-    const currentPolicy = sessionStorage.getItem('currentPolicy');
 
     return this.client
       .acquireTokenSilent({
         account: this.account,
         ...LOGIN_REQUEST,
-        authority: `${process.env.B2C_AUTHORITY}/${currentPolicy}`,
+        authority: `${process.env.B2C_AUTHORITY}/${process.env.B2C_LOGIN_POLICY}`,
       } as SilentRequest)
       .then((result) => {
         if (!result.accessToken || result.accessToken === '') {
@@ -85,10 +85,11 @@ export class AuthModule {
           .acquireTokenRedirect({
             account: this.account,
             ...LOGIN_REQUEST,
-            authority: `${process.env.B2C_AUTHORITY}/${currentPolicy}`,
+            authority: `${process.env.B2C_AUTHORITY}/${process.env.B2C_LOGIN_POLICY}`,
           } as RedirectRequest)
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-          .catch(() => {});
+          .catch((ex) => {
+            console.log(ex);
+          });
         return null;
       });
   }
@@ -126,7 +127,9 @@ export class AuthModule {
           try {
             // Password reset
             this.client.loginRedirect(redirectRequest);
-          } catch {}
+          } catch {
+            console.log(err);
+          }
         }
         if (err.errorMessage.indexOf('AADB2C90077') > -1) {
         }
