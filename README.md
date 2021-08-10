@@ -31,7 +31,6 @@ docker-compose up
 That's it, you can start changing files. To be sure all is well, though, you can check on a few things:
 
 ### Check List  
-
 1. Docker Desktop will show five `RUNNING` services: (`www, graphql, api, redis, and  postgres`)
 2. The site will be accessible via `http://localhost`
 3. GraphQL is accessible at `http://localhost:8080/graphql`
