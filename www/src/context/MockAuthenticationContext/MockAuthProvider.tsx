@@ -14,7 +14,7 @@ import { AuthContext } from '../AuthenticationContext/types';
 interface MockAuthProviderProps {
   origin?: string;
   children?: JSX.Element;
-  user: string;
+  user?: string;
 }
 
 export const MockAuthProvider = (props: MockAuthProviderProps): JSX.Element => {
