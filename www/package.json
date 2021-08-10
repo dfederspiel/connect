@@ -2,23 +2,6 @@
   "name": "www",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@apollo/client": "^3.3.13",
-    "@azure/msal-browser": "^2.8.0",
-    "@casl/ability": "^5.1.1",
-    "@material-ui/core": "^4.11.3",
-    "@material-ui/icons": "^4.11.2",
-    "@material-ui/lab": "^4.0.0-alpha.57",
-    "graphql": "^15.4.0",
-    "http-proxy-middleware": "^1.0.6",
-    "qs": "^6.9.6",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-router-dom": "^5.2.0",
-    "subscriptions-transport-ws": "^0.9.18",
-    "typeface-roboto": "^1.1.13",
-    "web-vitals": "^0.2.4"
-  },
   "scripts": {
     "build": "cross-env TS_NODE_PROJECT=\"./webpack/tsconfig.json\" webpack --config ./webpack/webpack.config.prod.ts",
     "build:analyze": "cross-env TS_NODE_PROJECT=\"./webpack/tsconfig.json\" webpack --config ./webpack/webpack.config.analyze.ts",
@@ -41,7 +24,23 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://api:3000",
+  "dependencies": {
+    "@apollo/client": "^3.3.13",
+    "@azure/msal-browser": "^2.8.0",
+    "@casl/ability": "^5.1.1",
+    "@material-ui/core": "^4.11.3",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.57",
+    "graphql": "^15.4.0",
+    "http-proxy-middleware": "^1.0.6",
+    "qs": "^6.9.6",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-router-dom": "^5.2.0",
+    "subscriptions-transport-ws": "^0.9.18",
+    "typeface-roboto": "^1.1.13",
+    "web-vitals": "^0.2.4"
+  },
   "devDependencies": {
     "@apollo/react-testing": "^4.0.0",
     "@babel/core": "^7.15.0",
