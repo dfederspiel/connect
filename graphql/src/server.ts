@@ -15,6 +15,7 @@ import AffirmationsResolvers, {
 import UsersResolvers, { UsersTypeDefs } from './resolvers/UsersResolvers';
 import { DocumentNode } from 'graphql';
 import { IPubSub } from './lib/types';
+import { PrismaClient } from '.prisma/client';
 
 const rootTypeDefs = gql`
   type Query {
@@ -33,6 +34,7 @@ interface IDataSources {
   userApi: UserDataSource;
 }
 export default class GraphQLServer {
+  client: PrismaClient;
   typedefs: Array<DocumentNode>;
   resolvers: IResolvers[];
   pubsub: IPubSub;
@@ -43,10 +45,11 @@ export default class GraphQLServer {
 
   constructor(pubsub: IPubSub, mocks: IMocks | boolean) {
     this.pubsub = pubsub;
-    this.dataContext = new UserDataContext();
+    this.client = new PrismaClient();
+    this.dataContext = new UserDataContext(this.client);
     this.authContext = new AuthContext(this.dataContext);
     this.datasources = {
-      userApi: new UserDataSource(new UserDataContext()),
+      userApi: new UserDataSource(new UserDataContext(this.client)),
     };
     this.mocks = mocks;
     this.typedefs = [AffirmationsTypeDefs, UsersTypeDefs];
