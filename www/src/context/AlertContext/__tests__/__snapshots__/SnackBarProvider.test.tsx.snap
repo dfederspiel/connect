@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`the toast provider exists 1`] = `
+Object {
+  "all": Array [
+    Object {
+      "message": "",
+      "updateMessage": [Function],
+    },
+    Object {
+      "message": "test",
+      "updateMessage": [Function],
+    },
+  ],
+  "current": Object {
+    "message": "test",
+    "updateMessage": [Function],
+  },
+  "error": undefined,
+}
+`;
