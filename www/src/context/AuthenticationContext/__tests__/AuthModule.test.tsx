@@ -119,10 +119,13 @@ describe('the auth module', () => {
       const spy = jest
         .spyOn(PublicClientApplication.prototype, 'logoutRedirect')
         .mockImplementation(() => Promise.resolve());
+      sessionStorage.setItem('loginPolicy', '123');
       const authModule = new AuthModule(Mode.Client);
       expect(authModule.logout).toBeDefined();
-      authModule.logout();
+      await authModule.logout();
+
       expect(spy).toHaveBeenCalledTimes(1);
+      expect(sessionStorage.getItem('loginPolicy')).toBeDefined();
     });
   });
 
