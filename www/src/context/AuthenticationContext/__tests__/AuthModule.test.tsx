@@ -1,11 +1,15 @@
-import { AuthModule, Mode } from '../AuthModule';
 import {
   AccountInfo,
   AuthenticationResult,
   PublicClientApplication,
 } from '@azure/msal-browser';
+import { AuthModule, Mode } from '../AuthModule';
 
 describe('the auth module', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('initializes on load', () => {
     const authModule = new AuthModule(Mode.Server);
     expect(authModule).toBeDefined();
@@ -26,8 +30,6 @@ describe('the auth module', () => {
 
     describe('when redirect fails', () => {
       it('can login with popup', async () => {
-        jest.clearAllMocks();
-
         const spy1 = jest
           .spyOn(PublicClientApplication.prototype, 'loginRedirect')
           .mockImplementation(() => Promise.reject());
@@ -45,7 +47,6 @@ describe('the auth module', () => {
 
       describe('when popup fails', () => {
         it('fails gracefully', async () => {
-          jest.clearAllMocks();
           const spy1 = jest
             .spyOn(PublicClientApplication.prototype, 'loginRedirect')
             .mockImplementation(() => Promise.reject());
@@ -76,7 +77,6 @@ describe('the auth module', () => {
 
     describe('when account is found', () => {
       it('can acquire a token', async () => {
-        jest.clearAllMocks();
         jest
           .spyOn(PublicClientApplication.prototype, 'acquireTokenSilent')
           .mockImplementation(() =>
@@ -98,7 +98,6 @@ describe('the auth module', () => {
 
     describe('when no access token is returned', () => {
       it('will throw an InteractionRequired exception', async () => {
-        jest.clearAllMocks();
         jest
           .spyOn(PublicClientApplication.prototype, 'acquireTokenSilent')
           .mockImplementation(() => Promise.resolve({} as AuthenticationResult));
@@ -117,7 +116,6 @@ describe('the auth module', () => {
 
   describe('when logging out', () => {
     it('logs the user out', async () => {
-      jest.clearAllMocks();
       const spy = jest
         .spyOn(PublicClientApplication.prototype, 'logoutRedirect')
         .mockImplementation(() => Promise.resolve());
@@ -130,7 +128,6 @@ describe('the auth module', () => {
 
   describe('when retrieving the active account', () => {
     it('will return the account for the logged in user', () => {
-      jest.clearAllMocks();
       const spy = jest
         .spyOn(PublicClientApplication.prototype, 'getAllAccounts')
         .mockImplementation(
@@ -149,7 +146,6 @@ describe('the auth module', () => {
     });
 
     it('will return undefined if no accounts are found', () => {
-      jest.clearAllMocks();
       const spy = jest
         .spyOn(PublicClientApplication.prototype, 'getAllAccounts')
         .mockImplementation(() => [] as AccountInfo[]);
@@ -176,11 +172,6 @@ describe('the auth module', () => {
               ] as AccountInfo[],
           );
       });
-
-      afterEach(() => {
-        jest.clearAllMocks();
-      });
-
       it('will retrieve the logged in account from session', async () => {
         const spy = jest
           .spyOn(PublicClientApplication.prototype, 'handleRedirectPromise')
@@ -216,16 +207,14 @@ describe('the auth module', () => {
     describe('when the response throws an exception', () => {
       describe('when the error indicates password reset', () => {
         it('will redirect the user to the appropriate flow', () => {
-          jest.clearAllMocks();
-
-          const spy1 = jest
+          jest
             .spyOn(PublicClientApplication.prototype, 'handleRedirectPromise')
             .mockImplementation(() =>
               Promise.reject({
                 errorMessage: 'AADB2C90118',
               }),
             );
-          const spy2 = jest
+          jest
             .spyOn(PublicClientApplication.prototype, 'loginRedirect')
             .mockImplementation(() => Promise.resolve());
 
@@ -236,9 +225,7 @@ describe('the auth module', () => {
 
       describe('when the error indicates cancelled flow', () => {
         it('will redirect the user to the appropriate flow', () => {
-          jest.clearAllMocks();
-
-          const spy1 = jest
+          jest
             .spyOn(PublicClientApplication.prototype, 'handleRedirectPromise')
             .mockImplementation(() =>
               Promise.reject({
