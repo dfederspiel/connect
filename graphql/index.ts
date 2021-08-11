@@ -7,6 +7,8 @@ import GraphQLServer from './src/server';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { DataMocks } from './src/mocks';
 
+import { test } from '@lib/index';
+console.log(test('GRAPHQL'));
 const pubsub = new RedisPubSub({
   connection: {
     host: process.env.REDIS_HOST || '',

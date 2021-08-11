@@ -6,16 +6,16 @@ import {
   IResolvers,
 } from 'apollo-server-express';
 import { DataSources } from 'apollo-server-core/dist/graphqlOptions';
-import { AuthContext } from './AuthContext';
 import UserDataContext from './data/UserDataContext';
 import UserDataSource from './datasources/UsersDataSource';
 import AffirmationsResolvers, {
   AffirmationsTypeDefs,
 } from './resolvers/AffirmationsResolvers';
 import UsersResolvers, { UsersTypeDefs } from './resolvers/UsersResolvers';
-import { DocumentNode } from 'graphql';
 import { IPubSub } from './lib/types';
-import { PrismaClient } from '.prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { DocumentNode } from 'graphql/language';
+import { AuthContext } from '../../lib/AuthContext';
 
 const rootTypeDefs = gql`
   type Query {
@@ -35,7 +35,7 @@ interface IDataSources {
 }
 export default class GraphQLServer {
   client: PrismaClient;
-  typedefs: Array<DocumentNode>;
+  typeDefs: Array<DocumentNode>;
   resolvers: IResolvers[];
   pubsub: IPubSub;
   datasources: DataSources<IDataSources>;
@@ -52,16 +52,16 @@ export default class GraphQLServer {
       userApi: new UserDataSource(new UserDataContext(this.client)),
     };
     this.mocks = mocks;
-    this.typedefs = [AffirmationsTypeDefs, UsersTypeDefs];
+    this.typeDefs = [AffirmationsTypeDefs, UsersTypeDefs];
     this.resolvers = [
       new AffirmationsResolvers(pubsub).resolvers,
       new UsersResolvers().resolvers,
     ];
   }
 
-  server() {
+  server(): ApolloServer {
     return new ApolloServer({
-      typeDefs: [rootTypeDefs, ...this.typedefs],
+      typeDefs: [rootTypeDefs, ...this.typeDefs],
       resolvers: this.resolvers,
       dataSources: () => this.datasources,
       introspection: true,
