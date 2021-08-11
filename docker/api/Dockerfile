@@ -6,7 +6,9 @@ RUN npm install -g typescript nodemon ts-node prisma
 
 COPY ./package.json .
 COPY ./yarn.lock .
+COPY ./tsconfig.json .
 COPY ./prisma ./prisma
+COPY ./lib ./lib
 RUN yarn install
 RUN prisma generate
 COPY ./api ./api
