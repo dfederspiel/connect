@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "nodemon ./src/index.ts",
-    "start:production": "ts-node ./src/index.ts",
+    "start": "nodemon ./index.ts",
+    "start:production": "ts-node ./index.ts",
     "prisma": "prisma generate --schema=../prisma/schema.prisma"
   },
   "author": "David Federspiel",
