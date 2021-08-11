@@ -45,7 +45,6 @@
   },
   "scripts": {
     "setup": "npm-run-all setup:*",
-    "setup:root": "yarn install",
     "setup:www": "cd www && yarn install",
     "setup:graphql": "cd graphql && yarn install",
     "setup:api": "cd api && yarn install",
