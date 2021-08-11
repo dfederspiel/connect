@@ -5,7 +5,7 @@ import { ApolloProvider } from '@apollo/client';
 // This is necessary because we will need auth context
 // to attach tokens to the header. See useProvideApolloAuth
 // to see how we encapsulate the client instance with useAuth
-// and attach it in the setContext Apollo route (for modifying outging requests)
+// and attach it in the setContext Apollo route (for modifying outgoing requests)
 
 export const ApolloAuthProvider = ({
   children,

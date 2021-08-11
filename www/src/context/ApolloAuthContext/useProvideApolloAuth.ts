@@ -2,7 +2,7 @@ import { ApolloClient, createHttpLink, InMemoryCache, split } from '@apollo/clie
 import { setContext } from '@apollo/client/link/context';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
-import { OperationDefinitionNode } from 'graphql';
+import { OperationDefinitionNode } from 'graphql/language';
 import { ConnectionParams } from 'subscriptions-transport-ws';
 import { useAuth } from '../AuthenticationContext';
 import { ApolloAuthContext } from './types';

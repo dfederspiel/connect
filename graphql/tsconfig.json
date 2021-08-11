@@ -1,17 +1,11 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
       "@lib/*": [
         "../lib/*"
       ],
-    },
-    "skipLibCheck": true,
-    "target": "es6",
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "strict": true,
-    "outDir": "./dist",
-    "jsx": "react"
-  },
+    }
+  }
 }

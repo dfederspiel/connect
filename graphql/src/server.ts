@@ -15,7 +15,7 @@ import UsersResolvers, { UsersTypeDefs } from './resolvers/UsersResolvers';
 import { IPubSub } from './lib/types';
 import { PrismaClient } from '@prisma/client';
 import { DocumentNode } from 'graphql/language';
-import { AuthContext } from '../../lib/AuthContext';
+import { AuthContext } from '@lib/auth/AuthContext';
 
 const rootTypeDefs = gql`
   type Query {

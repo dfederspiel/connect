@@ -20,13 +20,9 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "paths": {
-      "@src/*": ["src/*"],
-      "@gql": ["src/generated"]
-    }
   },
   "include": [
     "src",
-    "index.ts"  
-, "setupTests.ts", "index.tsx"  ]
+    "index.ts",
+  ]
 }
