@@ -10,4 +10,7 @@ module.exports = {
     'www/src/**/*.{js,jsx,ts,tsx}',
     '!**/node_modules/**',
   ],
+  moduleNameMapper: {
+    '^@lib/(.*)$': '<rootDir>/lib/$1',
+  },
 };
