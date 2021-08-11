@@ -25,11 +25,11 @@ const config: Configuration = {
     injectClient: false,
     proxy: {
       '/api': {
-        target: 'http://api',
+        target: 'http://api:3000',
         changeOrigin: true,
       },
       '/graphql': {
-        target: 'http://graphql',
+        target: 'http://graphql:4000',
         changeOrigin: true,
         ws: true,
       },
