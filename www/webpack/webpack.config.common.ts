@@ -1,5 +1,5 @@
 /* eslint-env node */
-import { resolve as _resolve } from 'path';
+import { resolve } from 'path';
 
 import HtmlWebPackPlugin from 'html-webpack-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
@@ -66,8 +66,8 @@ const config: webpack.Configuration = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebPackPlugin({
-      template: _resolve(__dirname, '../public', 'index.html'),
-      favicon: _resolve(__dirname, '../public', 'favicon.ico'),
+      template: resolve(__dirname, '../public', 'index.html'),
+      favicon: resolve(__dirname, '../public', 'favicon.ico'),
       filename: './index.html',
     }),
     new IgnoreNotFoundExportPlugin(),

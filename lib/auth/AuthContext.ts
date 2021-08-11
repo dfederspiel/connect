@@ -1,7 +1,8 @@
 import { User } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
-import { IUserDataContext } from './data/UserDataContext';
+import { IUserDataContext } from './UserDataContext';
+import { NextFunction, Request, Response } from 'express';
 
 const client = jwksClient({
   jwksUri: `${process.env.B2C_AUTHORITY}/${process.env.B2C_LOGIN_POLICY}/discovery/v2.0/keys`,
@@ -47,11 +48,27 @@ export class AuthContext {
             });
             resolve(decoded);
           } catch (ex) {
-            //console.log("ERROR PROCESSING TOKEN", ex.message, token);
+            console.error('[ERROR PROCESSING TOKEN]', token);
             reject(ex);
           }
         }
       });
     });
+  };
+
+  middleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const token = req?.headers?.authorization?.split(' ')[1];
+      let user;
+      if (token) {
+        const decoded = await this.decode(token);
+        user = await this.getUser(decoded);
+        res.locals.user = user;
+      }
+      next();
+    } catch {
+      console.error('[ERROR IN AUTH MIDDLEWARE]');
+      next();
+    }
   };
 }
