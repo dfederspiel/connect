@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`the user component when the user is logged in renders correctly with user context 1`] = `
+<DocumentFragment>
+  <p
+    class="MuiTypography-root MuiTypography-body1"
+  >
+    david@codefly.ninja
+    <button
+      class="MuiButtonBase-root MuiButton-root MuiButton-text"
+      tabindex="0"
+      type="button"
+    >
+      <span
+        class="MuiButton-label"
+      >
+        Logout
+      </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
+    </button>
+  </p>
+</DocumentFragment>
+`;
+
+exports[`the user component when the user is not logged in renders correctly without user context 1`] = `
+<DocumentFragment>
+  <p
+    class="MuiTypography-root MuiTypography-body1"
+  >
+    <button
+      class="MuiButtonBase-root MuiButton-root MuiButton-text"
+      tabindex="0"
+      type="button"
+    >
+      <span
+        class="MuiButton-label"
+      >
+        Login
+      </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
+    </button>
+  </p>
+</DocumentFragment>
+`;
