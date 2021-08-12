@@ -1,5 +1,5 @@
 # Connect
-![build status](https://github.com/dfederspiel/connect/actions/workflows/main.yml/badge.svg)
+![build status](https://github.com/dfederspiel/connect/actions/workflows/main.yml/badge.svg)  [![codecov](https://codecov.io/gh/dfederspiel/connect/branch/main/graph/badge.svg?token=FYWSPSO3R0)](https://codecov.io/gh/dfederspiel/connect)
 
 Connect is a dev environment that focuses on developer experience. It is a Docker friendly, enterprise-grade, starting point for anyone wanting to use React and GraphQL in their projects. It is an opinionated codebase, and a successor to my also opinionated [Rapid Dev](https://github.com/dfederspiel/rapid-dev) static site generator.
 
