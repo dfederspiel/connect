@@ -23,7 +23,7 @@ describe('the user context', () => {
         },
       } as unknown as Response,
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      () => { },
+      () => {},
     );
   });
 });

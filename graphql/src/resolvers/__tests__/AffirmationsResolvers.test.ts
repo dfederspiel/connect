@@ -34,17 +34,4 @@ describe('the affirmations resolver', () => {
     );
     expect(result).toMatchSnapshot();
   });
-
-  xit('can cover subscriptions', async () => {
-    const resolver = new AffirmationsResolvers(mockPubSub as unknown as IPubSub);
-    const result = await resolver.resolvers.Subscription.affirmationGiven.subscribe();
-    await result.return({
-      to: '1',
-    }, null, {
-      user: {
-        id: '1'
-      }
-    });
-    expect(result).toBeDefined();
-  });
 });
