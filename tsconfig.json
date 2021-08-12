@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
+    "strictNullChecks": true,
+    "baseUrl": ".",
     "target": "es6",
     "module": "commonjs",
     "jsx": "react-jsx",
