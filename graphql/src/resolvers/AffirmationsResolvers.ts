@@ -1,5 +1,5 @@
 import { User } from '@prisma/client';
-import { gql, IResolvers, withFilter } from 'apollo-server-express';
+import { gql, withFilter } from 'apollo-server-express';
 import { IPubSub } from '../lib/types';
 
 const AFFIRMATION_GIVEN = 'AFFIRMATION_GIVEN';
@@ -19,8 +19,30 @@ export const AffirmationsTypeDefs = gql`
   }
 `;
 
+interface IAffirmationsMutationResolvers {
+  sendAffirmation(
+    parent: any,
+    args: any,
+    context: any,
+    other: any,
+  ): Promise<{
+    from: number;
+    to: any;
+  }>;
+}
+
+interface IAffirmationsSubscriptionResolvers {
+  affirmationGiven: {
+    subscribe(): any;
+  };
+}
+interface IAffirmationsResolvers {
+  Mutation: IAffirmationsMutationResolvers;
+  Subscription: IAffirmationsSubscriptionResolvers;
+}
+
 export default class AffirmationsResolvers {
-  resolvers: IResolvers;
+  resolvers: IAffirmationsResolvers;
   pubsub: IPubSub;
 
   constructor(pubsub: IPubSub) {
@@ -28,7 +50,7 @@ export default class AffirmationsResolvers {
     this.pubsub = pubsub;
   }
 
-  initializeResolvers = (): IResolvers => {
+  initializeResolvers = (): IAffirmationsResolvers => {
     return {
       Mutation: {
         sendAffirmation: async (_: any, { userId }: any, context: { user: User }) => {
@@ -44,7 +66,7 @@ export default class AffirmationsResolvers {
         affirmationGiven: {
           subscribe: withFilter(
             () => this.pubsub.asyncIterator('AFFIRMATION_GIVEN'),
-            (payload, _, context) => {
+            (payload, _args, context) => {
               return parseInt(payload.to) === context.user.id;
             },
           ),

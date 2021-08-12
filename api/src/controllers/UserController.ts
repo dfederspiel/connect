@@ -1,4 +1,3 @@
-import { User } from '@prisma/client';
 import { Router } from 'express';
 
 export default class UserController {
