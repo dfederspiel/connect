@@ -58,7 +58,6 @@ const AppView = () => {
         </Toolbar>
       </AppBar>
       <Grid
-        xs={12}
         style={{
           marginTop: '80px',
         }}

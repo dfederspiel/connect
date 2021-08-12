@@ -25,11 +25,11 @@ const Affirmations = () => {
 
   return (
     (loading && <div>Loading...</div>) ||
-    (error && <div>Error! ${error.message}`</div>) ||
+    (error && <div>Error! {error.message}</div>) ||
     (data &&
       data.users.map((user: User) => {
         return (
-          <div key={user.id}>
+          <div data-testid="user" key={user.id}>
             <button
               type="button"
               onClick={() => {

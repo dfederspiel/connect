@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`the affirmations component displays a list of users 1`] = `
+<DocumentFragment>
+  <div
+    data-testid="user"
+  >
+    <button
+      type="button"
+    >
+      Send
+    </button>
+    <div>
+      1
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`the affirmations component displays an error when the query fails 1`] = `
+<DocumentFragment>
+  <div>
+    Error! An error occurred
+  </div>
+</DocumentFragment>
+`;
+
+exports[`the affirmations component initializes with a loading state 1`] = `
+<DocumentFragment>
+  <div>
+    Loading...
+  </div>
+</DocumentFragment>
+`;
