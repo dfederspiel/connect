@@ -3,27 +3,21 @@ import { createServer } from 'http';
 import express from 'express';
 import cors from 'cors';
 import GraphQLServer from './src/server';
-
-import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { DataMocks } from './__mocks__/mocks';
 
 import { test } from '@lib/tools';
 console.log(test('GRAPHQL'));
-const pubsub = new RedisPubSub({
-  connection: {
-    host: process.env.REDIS_HOST || '',
-    port: 6379,
-    retry_strategy: (options: { attempt: number }) => {
-      return Math.max(options.attempt * 100, 3000);
-    },
-  },
-});
 
-const mocks = process.env.USE_MOCKS === 'true' ? DataMocks : false;
+import { PubSub } from 'graphql-subscriptions';
+import faker from 'faker';
+
+const pubsub = new PubSub();
+
+const mocks = process.env.USE_MOCKS === 'sure' ? DataMocks : false;
 const graphQlServer = new GraphQLServer(pubsub, mocks);
 const apollo = graphQlServer.server();
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || faker.datatype.number({ min: 4500, max: 5500 });
 
 const app = express();
 app.use(cors());

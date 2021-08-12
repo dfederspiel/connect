@@ -43,9 +43,9 @@ export default class GraphQLServer {
   private dataContext: UserDataContext;
   private authContext: AuthContext;
 
-  constructor(pubsub: IPubSub, mocks: IMocks | boolean) {
+  constructor(pubsub: IPubSub, mocks: IMocks | boolean, client?: PrismaClient) {
     this.pubsub = pubsub;
-    this.client = new PrismaClient();
+    this.client = client || new PrismaClient();
     this.dataContext = new UserDataContext(this.client);
     this.authContext = new AuthContext(this.dataContext);
     this.datasources = {
@@ -89,7 +89,8 @@ export default class GraphQLServer {
 
           // optionally block the user
           // we could also check user roles/permissions here
-          if (!user) throw new AuthenticationError('you must be logged in');
+          if (process.env.NODE_ENV === 'production')
+            if (!user) throw new AuthenticationError('you must be logged in');
 
           // add the user to the context
           return { user };

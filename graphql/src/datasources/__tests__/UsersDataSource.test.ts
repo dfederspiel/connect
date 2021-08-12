@@ -1,4 +1,4 @@
-import { MockUserDataContext } from '../../__mocks__/MockUserDataContext';
+import { MockUserDataContext } from '../../../__mocks__/MockUserDataContext';
 import UserDataSource from '../UsersDataSource';
 
 describe('the users datasource', () => {

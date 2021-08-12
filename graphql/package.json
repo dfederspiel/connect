@@ -4,6 +4,7 @@
   "scripts": {
     "start": "nodemon -r tsconfig-paths/register ./index.ts",
     "start:production": "ts-node -r tsconfig-paths/register ./index.ts",
+    "start:production:test": "ts-node -r tsconfig-paths/register ./test.index.ts",
     "prisma": "prisma generate --schema=../prisma/schema.prisma"
   },
   "author": "David Federspiel",
@@ -18,7 +19,11 @@
     "graphql-redis-subscriptions": "^2.3.1"
   },
   "devDependencies": {
+    "apollo-link": "^1.2.14",
+    "apollo-link-ws": "^1.0.20",
     "nodemon": "^2.0.12",
-    "ts-node": "^10.2.0"
+    "subscriptions-transport-ws": "^0.9.19",
+    "ts-node": "^10.2.0",
+    "ws": "^8.1.0"
   }
 }
