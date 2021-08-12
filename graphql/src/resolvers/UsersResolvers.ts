@@ -15,14 +15,22 @@ export const UsersTypeDefs = gql`
   }
 `;
 
+interface IUserResolversQuery {
+  user(parent: any, args: any, context: any, other: any): Promise<User | null>;
+  users(parent: any, args: any, context: any, other: any): Promise<User[]>;
+}
+interface IUserResolvers {
+  Query: IUserResolversQuery;
+}
+
 export default class UsersResolvers {
-  resolvers: IResolvers;
+  resolvers: IUserResolvers;
 
   constructor() {
     this.resolvers = this.initializeResolvers();
   }
 
-  initializeResolvers = (): IResolvers => {
+  private initializeResolvers = (): IUserResolvers => {
     return {
       Query: {
         user: (
@@ -31,10 +39,10 @@ export default class UsersResolvers {
           context: { user: User; dataSources: { userApi: UserDataSource } },
           __: any,
         ) => {
-          if (!context.user)
-            return {
-              error: 'There is no user context, did you forget to pass a bearer token?',
-            };
+          // if (!context.user)
+          //   return {
+          //     error: 'There is no user context, did you forget to pass a bearer token?',
+          //   };
           return context.dataSources.userApi.getById(context.user.id.toString());
         },
         users: (
@@ -43,13 +51,13 @@ export default class UsersResolvers {
           context: { user: User; dataSources: { userApi: UserDataSource } },
           __: any,
         ) => {
-          if (!context.user)
-            return {
-              error: 'There is no user context, did you forget to pass a bearer token?',
-            };
+          // if (!context.user)
+          //   return {
+          //     error: 'There is no user context, did you forget to pass a bearer token?',
+          //   };
           return context.dataSources.userApi.getAll();
         },
-      },
+      } as IUserResolversQuery,
     };
   };
 }

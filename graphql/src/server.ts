@@ -56,7 +56,7 @@ export default class GraphQLServer {
     this.resolvers = [
       new AffirmationsResolvers(pubsub).resolvers,
       new UsersResolvers().resolvers,
-    ];
+    ] as any; // TODO: fix types
   }
 
   server(): ApolloServer {
