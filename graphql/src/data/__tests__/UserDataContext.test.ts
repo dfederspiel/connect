@@ -1,4 +1,4 @@
-import { MockContext, Context, createMockContext } from '../../context';
+import { MockContext, Context, createMockContext } from '../../../__mocks__/context';
 import UserDataContext from '../UserDataContext';
 
 let mockCtx: MockContext;

@@ -5,7 +5,7 @@ import cors from 'cors';
 import GraphQLServer from './src/server';
 
 import { RedisPubSub } from 'graphql-redis-subscriptions';
-import { DataMocks } from './src/mocks';
+import { DataMocks } from './__mocks__/mocks';
 
 import { test } from '@lib/tools';
 console.log(test('GRAPHQL'));
@@ -19,7 +19,7 @@ const pubsub = new RedisPubSub({
   },
 });
 
-const mocks = process.env.USE_MOCKS === 'sure' ? DataMocks : false;
+const mocks = process.env.USE_MOCKS === 'true' ? DataMocks : false;
 const graphQlServer = new GraphQLServer(pubsub, mocks);
 const apollo = graphQlServer.server();
 

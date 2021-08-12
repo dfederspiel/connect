@@ -3,7 +3,7 @@ import { createServer } from 'http';
 import express from 'express';
 import cors from 'cors';
 import GraphQLServer from './src/server';
-import { DataMocks } from './src/mocks';
+import { DataMocks } from './__mocks__/mocks';
 
 import { test } from '@lib/tools';
 console.log(test('GRAPHQL'));

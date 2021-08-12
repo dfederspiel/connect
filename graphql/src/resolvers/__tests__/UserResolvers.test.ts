@@ -1,5 +1,5 @@
 import { User } from '@prisma/client';
-import { MockUserDataContext } from '../../__mocks__/MockUserDataContext';
+import { MockUserDataContext } from '../../../__mocks__/MockUserDataContext';
 import UsersResolvers from '../UsersResolvers';
 
 const user = {

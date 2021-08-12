@@ -3,7 +3,18 @@ import GraphQLServer from '../server';
 import { PubSub } from 'graphql-subscriptions';
 import express from 'express';
 import { exec } from 'child_process';
+import { gql } from 'apollo-server-express';
+
+import { MockContext, Context, createMockContext } from '../../__mocks__/context';
+
 const pubsub = new PubSub();
+let mockCtx: MockContext;
+let ctx: Context;
+
+beforeEach(() => {
+  mockCtx = createMockContext();
+  ctx = mockCtx as unknown as Context;
+});
 
 describe('the graphql server', () => {
   it('exists', () => {
@@ -25,5 +36,28 @@ describe('the graphql server', () => {
         done();
       });
     });
+  });
+
+  it('can query stuff', async () => {
+    mockCtx.prisma.user.findMany.mockResolvedValue([
+      {
+        id: 1,
+        domain: '',
+        email: '',
+      },
+    ]);
+    const apollo = new GraphQLServer(pubsub, false, mockCtx.prisma);
+    const instance = apollo.server();
+    const result = await instance.executeOperation({
+      query: gql`
+        {
+          users {
+            id
+            email
+          }
+        }
+      `,
+    });
+    expect(result).toMatchSnapshot();
   });
 });
