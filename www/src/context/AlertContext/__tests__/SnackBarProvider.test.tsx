@@ -4,7 +4,7 @@ import { SnackBarProvider, useSnacks } from '../SnackBarProvider';
 
 describe('the toast provider', () => {
   const wrapper = ({ children }: any) => (
-    <SnackBarProvider timeout={1}>{children}</SnackBarProvider>
+    <SnackBarProvider timeout={100}>{children}</SnackBarProvider>
   );
   it('exists', async () => {
     const { result } = renderHook(() => useSnacks(), { wrapper });
