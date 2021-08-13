@@ -94,4 +94,24 @@ describe('the graphql server', () => {
     });
     expect(result).toMatchSnapshot();
   });
+
+  it('requires authentication if in production', async () => {
+    process.env.NODE_ENV = 'production';
+    const apollo = new GraphQLServer(pubsub, false, mockCtx.prisma);
+    const instance = apollo.server();
+    instance
+      .executeOperation({
+        query: gql`
+          {
+            users {
+              id
+              email
+            }
+          }
+        `,
+      })
+      .catch((err) => {
+        expect(err).toMatchSnapshot();
+      });
+  });
 });

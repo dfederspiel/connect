@@ -29,18 +29,6 @@ function sleep(ms) {
   });
 }
 
-const getWsClient = (wsurl, authToken) => {
-  const client = new SubscriptionClient(
-    wsurl,
-    {
-      reconnect: true,
-      connectionParams: { authToken, test: 'some_other_thing' },
-    },
-    ws,
-  );
-  return client;
-};
-
 const createSubscriptionObservable = (uri, authToken, query, variables?) => {
   const link = new WebSocketLink({
     uri,
@@ -79,7 +67,7 @@ describe('GraphQL API Subscriptions', () => {
   });
 
   it('Should be notified when a stream is created', async () => {
-    let eventNum = 0; // initialise a count of the events received by the subscription
+    let eventNum = 0; // initialize a count of the events received by the subscription
     const query = gql`
       subscription {
         affirmationGiven {
