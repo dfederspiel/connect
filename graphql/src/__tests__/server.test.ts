@@ -8,7 +8,6 @@ import { gql } from 'apollo-server-express';
 
 import { MockContext, Context, createMockContext } from '../../__mocks__/context';
 import { AuthContext } from '@lib/auth/AuthContext';
-import { PrismaPromise, User } from '@prisma/client';
 
 jest.spyOn(AuthContext.prototype, 'decode').mockReturnValue(Promise.resolve({}));
 

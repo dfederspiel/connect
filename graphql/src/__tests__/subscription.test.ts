@@ -12,6 +12,8 @@ import { Context, createMockContext, MockContext } from '../../__mocks__/context
 import { AuthContext } from '@lib/auth/AuthContext';
 
 const pubsub = new PubSub();
+const PORT = 9000;
+
 jest.spyOn(AuthContext.prototype, 'decode').mockReturnValue(Promise.resolve({}));
 jest.spyOn(AuthContext.prototype, 'getUser').mockReturnValue(
   Promise.resolve({
@@ -32,16 +34,22 @@ const getWsClient = (wsurl, authToken) => {
     wsurl,
     {
       reconnect: true,
-      connectionParams: authToken,
+      connectionParams: { authToken, test: 'some_other_thing' },
     },
     ws,
   );
   return client;
 };
 
-const createSubscriptionObservable = (wsurl, authToken, query, variables?) => {
-  const link = new WebSocketLink(getWsClient(wsurl, authToken));
-  return execute(link, { query: query, variables: variables });
+const createSubscriptionObservable = (uri, authToken, query, variables?) => {
+  const link = new WebSocketLink({
+    uri,
+    options: {
+      reconnect: true,
+      connectionParams: { authToken, test: 'some_other_thing' },
+    },
+  });
+  return execute(link, { query, variables });
 };
 
 describe('GraphQL API Subscriptions', () => {
@@ -62,11 +70,8 @@ describe('GraphQL API Subscriptions', () => {
     });
     const httpServer = createServer(app);
     instance.installSubscriptionHandlers(httpServer);
-    serverInstance = httpServer.listen(9020, async () => {
-      exec('echo "The \\$HOME variable is $HOME"', (error, stdout, stderr) => {
-        console.log('Server started...ready for tests', stdout, stderr, error);
-        sleep(1000).then(done);
-      });
+    serverInstance = httpServer.listen(PORT, async () => {
+      done();
     });
   });
   afterAll(() => {
@@ -83,11 +88,13 @@ describe('GraphQL API Subscriptions', () => {
         }
       }
     `; // the subscription query
+
     const client = createSubscriptionObservable(
-      'ws://localhost:9020/graphql',
+      `ws://localhost:${PORT}/graphql`,
       'some token',
       query,
     );
+
     const consumer = client.subscribe(
       (eventData) => {
         // whatever you need to do with the received data
@@ -96,12 +103,12 @@ describe('GraphQL API Subscriptions', () => {
         eventNum++;
       },
       (err) => {
-        console.log(err);
+        console.log('subscription error', err);
       },
     );
     await sleep(500);
 
-    const baseURL = supertest('http://localhost:9020/graphql');
+    const baseURL = supertest(`http://localhost:${PORT}/graphql`);
     await baseURL.post('/graphql').set('Authorization', 'some token').send({
       query: 'mutation { sendAffirmation(userId: 1) { to from } }',
     });
