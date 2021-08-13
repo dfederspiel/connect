@@ -8,7 +8,7 @@ const mockFetchPromise = Promise.resolve({
   },
 });
 
-global.fetch = jest.fn().mockImplementation(() => mockFetchPromise);
+//global.fetch = jest.fn().mockImplementation(() => mockFetchPromise);
 
 window.crypto = {
   getRandomValues: (buffer) => crypto.randomFillSync(buffer),

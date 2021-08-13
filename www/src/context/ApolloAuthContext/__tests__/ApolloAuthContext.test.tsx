@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
 import { ApolloAuthProvider } from '../ApolloAuthContext';
+import 'cross-fetch/polyfill';
 
 beforeAll(() => {
   process.env.APOLLO_HOST = 'http://localhost/graphql';

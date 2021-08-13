@@ -3,6 +3,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { MockAuthProvider } from '../../MockAuthenticationContext/MockAuthProvider';
 import { renderHook } from '@testing-library/react-hooks';
 import { useProvideApolloAuth } from '../useProvideApolloAuth';
+import 'cross-fetch/polyfill';
 
 beforeAll(() => {
   process.env.APOLLO_HOST = 'http://localhost/graphql';
