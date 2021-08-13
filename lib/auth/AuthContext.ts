@@ -15,7 +15,7 @@ export class AuthContext {
     this.context = context;
   }
 
-  getUser = async (token: any): Promise<User | null> => {
+  async getUser(token: any): Promise<User | null> {
     return new Promise(async (resolve, reject) => {
       try {
         if (!token) return null;
@@ -29,9 +29,9 @@ export class AuthContext {
         reject(ex);
       }
     });
-  };
+  }
 
-  decode = (token: string): Promise<string | any> => {
+  async decode(token: string): Promise<string | any> {
     return new Promise((resolve, reject) => {
       const jwtHeader = JSON.parse(
         Buffer.from(token.split('.')[0], 'base64').toString('utf8'),
@@ -54,9 +54,9 @@ export class AuthContext {
         }
       });
     });
-  };
+  }
 
-  middleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  async middleware(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const token = req?.headers?.authorization?.split(' ')[1];
       let user;
@@ -70,5 +70,5 @@ export class AuthContext {
       console.error('[ERROR IN AUTH MIDDLEWARE]');
       next();
     }
-  };
+  }
 }
