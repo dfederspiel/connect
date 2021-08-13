@@ -57,8 +57,8 @@ describe('the graphql server', () => {
     instance.applyMiddleware({ app });
     const httpServer = createServer(app);
     instance.installSubscriptionHandlers(httpServer);
-    const server = app.listen(80, async () => {
-      const baseURL = supertest('http://localhost:80/graphql');
+    const server = app.listen(9000, async () => {
+      const baseURL = supertest('http://localhost:9000/graphql');
       console.log('Server started...querying...');
       baseURL
         .post('/graphql')
