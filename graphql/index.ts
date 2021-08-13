@@ -11,7 +11,7 @@ import { test } from '@lib/tools';
 console.log(test('GRAPHQL'));
 const pubsub = new RedisPubSub({
   connection: {
-    host: process.env.REDIS_HOST || '',
+    host: process.env.REDIS_HOST || 'redis',
     port: 6379,
     retry_strategy: (options: { attempt: number }) => {
       return Math.max(options.attempt * 100, 3000);
