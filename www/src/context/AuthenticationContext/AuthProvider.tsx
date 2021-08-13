@@ -10,7 +10,7 @@ const authContext = createContext<AuthContext>(null as unknown as AuthContext);
 const authModule = new AuthModule(Mode.Client);
 
 interface AuthProviderProps {
-  children?: JSX.Element;
+  children?: React.ReactNode;
   provider?: AuthContext;
 }
 

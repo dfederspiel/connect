@@ -6,7 +6,7 @@ import AppView from './AppView';
 
 const App = (): JSX.Element => {
   return (
-    <SnackBarProvider>
+    <SnackBarProvider timeout={5000}>
       <AuthProvider>
         <ApolloAuthProvider>
           <AppView />

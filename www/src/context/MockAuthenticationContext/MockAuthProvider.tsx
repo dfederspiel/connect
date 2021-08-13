@@ -12,7 +12,7 @@ import { AuthContext } from '../AuthenticationContext/types';
 // eslint-disable-next-line react/prop-types
 
 interface MockAuthProviderProps {
-  children?: JSX.Element;
+  children?: React.ReactNode;
   user?: string;
 }
 
