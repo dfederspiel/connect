@@ -4,6 +4,13 @@
 import { User } from '@prisma/client';
 import AffirmationsResolvers from '../AffirmationsResolvers';
 import { PubSub } from 'graphql-subscriptions';
+import supertest from 'supertest';
+import express from 'express';
+import GraphQLServer from '../../server';
+import { createServer } from 'http';
+
+
+
 const pubsub = new PubSub();
 jest.setTimeout(20000)
 // // const { execute } = require('apollo-link');
@@ -24,6 +31,11 @@ jest.setTimeout(20000)
 //   const link = new WebSocketLink(getWsClient(wsUrl));
 //   return execute(link, {query: query, variables: variables});
 // };
+import { MockContext, Context, createMockContext } from '../../../__mocks__/context';
+
+
+let mockCtx: MockContext;
+let ctx: Context;
 
 const context = {
   user: {
@@ -59,6 +71,11 @@ const context = {
 //   serverProcess.kill('SIGSTOP')
 // })
 
+beforeEach(() => {
+  mockCtx = createMockContext();
+  ctx = mockCtx as unknown as Context;
+});
+
 describe('the affirmations resolver', () => {
   it('exists', () => {
     const resolver = new AffirmationsResolvers(pubsub);
@@ -87,4 +104,31 @@ describe('the affirmations resolver', () => {
       null,
     )
   });
+
+  it('can test with supertest', (done) => {
+    const app = express();
+    const apollo = new GraphQLServer(pubsub, false, mockCtx.prisma);
+    const instance = apollo.server();
+    const httpServer = createServer(app);
+    instance.installSubscriptionHandlers(httpServer);
+    const server = app.listen(9001, async () => {
+      apollo.pubsub.subscribe('AFFIRMATION_GIVEN', payload => {
+        console.log('RECEIVED PAYLOAD')
+        expect(payload).toEqual('test');
+      }).then(() => {
+        console.log('PUBLISH AFFIRMATION')
+        //return pubsub.publish('AFFIRMATION_GIVEN', 'test');
+      })
+      const baseURL = supertest('http://localhost:9001/graphql');
+      baseURL
+        .post('/graphql')
+        .send({ query: "mutation {\n  sendAffirmation(userId: 1) {\n    to\n    from\n  }\n}\n"})
+        .end(() => {
+          console.log('MUTATION FIRED')
+          server.close();
+          done();
+        })
+      
+    });
+  })
 });

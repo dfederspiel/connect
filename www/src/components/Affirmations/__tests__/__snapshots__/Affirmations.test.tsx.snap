@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`the affirmations component displays a list of users 1`] = `
+exports[`the affirmations component and when the button is clicked it triggers a send affirmation call 1`] = `
 <DocumentFragment>
   <div
     data-testid="user"
@@ -17,10 +17,19 @@ exports[`the affirmations component displays a list of users 1`] = `
 </DocumentFragment>
 `;
 
-exports[`the affirmations component displays an error when the query fails 1`] = `
+exports[`the affirmations component displays a list of users 1`] = `
 <DocumentFragment>
-  <div>
-    Error! An error occurred
+  <div
+    data-testid="user"
+  >
+    <button
+      type="button"
+    >
+      Send
+    </button>
+    <div>
+      1
+    </div>
   </div>
 </DocumentFragment>
 `;
