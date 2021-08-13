@@ -2,10 +2,15 @@ import { createServer } from 'http';
 import GraphQLServer from '../server';
 import { PubSub } from 'graphql-subscriptions';
 import express from 'express';
+import supertest from 'supertest';
 import { exec } from 'child_process';
 import { gql } from 'apollo-server-express';
 
 import { MockContext, Context, createMockContext } from '../../__mocks__/context';
+import { AuthContext } from '@lib/auth/AuthContext';
+import { PrismaPromise, User } from '@prisma/client';
+
+jest.spyOn(AuthContext.prototype, 'decode').mockReturnValue(Promise.resolve({}));
 
 const pubsub = new PubSub();
 let mockCtx: MockContext;
@@ -35,6 +40,36 @@ describe('the graphql server', () => {
         server.close();
         done();
       });
+    });
+  });
+
+  fit('can create a server instance with supertest', (done) => {
+    const app = express();
+    mockCtx.prisma.user.findMany.mockResolvedValue([
+      {
+        id: 1,
+        domain: 'codefly.ninja',
+        email: 'david@codefly.ninja',
+      },
+    ]);
+    const apollo = new GraphQLServer(pubsub, false, mockCtx.prisma);
+    const instance = apollo.server();
+    instance.applyMiddleware({ app });
+    const httpServer = createServer(app);
+    instance.installSubscriptionHandlers(httpServer);
+    const server = app.listen(80, async () => {
+      const baseURL = supertest('http://localhost:80/graphql');
+      console.log('Server started...querying...');
+      baseURL
+        .post('/graphql')
+        .set('Authorization', 'bad token')
+        .send({ query: '{ users { id } }' })
+        .expect(200)
+        .end((err, res) => {
+          expect(res.body.data.users.length).toEqual(1);
+          server.close();
+          done();
+        });
     });
   });
 
