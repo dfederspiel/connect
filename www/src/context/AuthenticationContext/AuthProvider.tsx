@@ -6,14 +6,18 @@ import { AuthModule, Mode } from './AuthModule';
  * AuthContext to be passed to any component that depends on user context.
  */
 
-const authContext = createContext<AuthContext>(null as any);
+const authContext = createContext<AuthContext>(null as unknown as AuthContext);
 const authModule = new AuthModule(Mode.Client);
+
+interface AuthProviderProps {
+  children?: React.ReactNode;
+  provider?: AuthContext;
+}
 
 // Provider component that wraps your app and makes auth object ...
 // ... available to any child component that calls useAuth().
 // eslint-disable-next-line react/prop-types
-export const AuthProvider = (props: any): JSX.Element => {
-  const { origin, children, provider } = props;
+export const AuthProvider = ({ children, provider }: AuthProviderProps): JSX.Element => {
   const auth = useProvideAuth(authModule) as AuthContext;
   return <authContext.Provider value={provider || auth}>{children}</authContext.Provider>;
 };

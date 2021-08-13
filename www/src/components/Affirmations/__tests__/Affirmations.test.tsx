@@ -1,7 +1,7 @@
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 import { User } from '@prisma/client';
-import { render, cleanup } from '@testing-library/react';
-import Affirmations, { GET_USERS } from '../Affirmations';
+import { render, cleanup, act, fireEvent } from '@testing-library/react';
+import Affirmations, { GET_USERS, SEND_AFFIRMATION } from '../Affirmations';
 
 let defaultMock = {
   request: {
@@ -20,11 +20,23 @@ let defaultMock = {
   },
 } as MockedResponse;
 
+const affirmationMock = {
+  request: {
+    query: SEND_AFFIRMATION,
+    variables: {
+      userId: 1,
+    },
+  },
+  result: {
+    data: {},
+  },
+} as MockedResponse;
+
 afterEach(cleanup);
 
 describe('the affirmations component', () => {
   const wrapper = ({ children }: any) => (
-    <MockedProvider mocks={[defaultMock]}>{children}</MockedProvider>
+    <MockedProvider mocks={[defaultMock, affirmationMock]}>{children}</MockedProvider>
   );
   it('initializes with a loading state', () => {
     const { asFragment } = render(<Affirmations />, { wrapper });
@@ -38,6 +50,16 @@ describe('the affirmations component', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
+  describe('and when the button is clicked', () => {
+    it('it triggers a send affirmation call', async () => {
+      const { findByRole } = render(<Affirmations />, { wrapper });
+      const affirmButton = await findByRole('button');
+      act(() => {
+        fireEvent.click(affirmButton);
+      });
+    });
+  });
+
   it('displays an error when the query fails', async () => {
     defaultMock = {
       request: {
@@ -45,11 +67,11 @@ describe('the affirmations component', () => {
       },
       error: new Error('An error occurred'),
     };
+
     const wrapper = ({ children }: any) => (
-      <MockedProvider mocks={[defaultMock]}>{children}</MockedProvider>
+      <MockedProvider mocks={[defaultMock, affirmationMock]}>{children}</MockedProvider>
     );
-    const { asFragment, findByText } = render(<Affirmations />, { wrapper });
+    const { findByText } = render(<Affirmations />, { wrapper });
     await findByText(`Error! An error occurred`);
-    expect(asFragment()).toMatchSnapshot();
   });
 });

@@ -121,18 +121,16 @@ export class AuthModule {
             this.cb && this.cb(this.account.name);
           });
         } else {
-          this.account = response?.account;
+          this.account = response.account;
           this.account && this.cb && this.cb(this.account.name);
         }
       })
       .catch((err) => {
         if (err.errorMessage.indexOf('AADB2C90118') > -1) {
-          try {
-            // Password reset
-            this.client.loginRedirect(redirectRequest);
-          } catch {
+          // Password reset
+          this.client.loginRedirect(redirectRequest).catch((err) => {
             console.log(err);
-          }
+          });
         }
         if (err.errorMessage.indexOf('AADB2C90077') > -1) {
         }

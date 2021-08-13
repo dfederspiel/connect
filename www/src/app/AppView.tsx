@@ -16,15 +16,15 @@ import HomeIcon from '@material-ui/icons/Home';
 import MenuIcon from '@material-ui/icons/Menu';
 import { useState } from 'react';
 import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom';
-import { useSnacks } from '../context/AlertContext/SnackBarProvider';
-import { AFFIRMATION_GIVEN_SUBSCRIPTION } from '../graphql/subscriptions';
+// import { useSnacks } from '../context/AlertContext/SnackBarProvider';
+// import { AFFIRMATION_GIVEN_SUBSCRIPTION } from '../graphql/subscriptions';
 import HomePage from '../pages/Home';
 import User from '../components/User';
 
-const AppView = () => {
+const AppView = (): JSX.Element => {
   const [open, setOpen] = useState(false);
 
-  const handleClick = (event: any) => {
+  const handleClick = () => {
     setOpen(true);
   };
 
@@ -32,13 +32,13 @@ const AppView = () => {
     setOpen(false);
   };
 
-  const snacks = useSnacks();
+  // const snacks = useSnacks();
 
-  useSubscription(AFFIRMATION_GIVEN_SUBSCRIPTION, {
-    onSubscriptionData: ({ subscriptionData }) => {
-      snacks.updateMessage('Affirmation Given!!');
-    },
-  });
+  // useSubscription(AFFIRMATION_GIVEN_SUBSCRIPTION, {
+  //   onSubscriptionData: ({ subscriptionData }) => {
+  //     snacks.updateMessage('Affirmation Given!!');
+  //   },
+  // });
 
   return (
     <Container>
@@ -65,7 +65,13 @@ const AppView = () => {
         <Router>
           <Drawer anchor="left" open={open} onClose={handleClose}>
             <List>
-              <ListItem button onClick={handleClose} component={Link} to="/">
+              <ListItem
+                aria-label="menu close"
+                button
+                onClick={handleClose}
+                component={Link}
+                to="/"
+              >
                 <ListItemIcon>
                   <HomeIcon />
                 </ListItemIcon>

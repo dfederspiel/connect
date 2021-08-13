@@ -43,7 +43,7 @@ describe('the graphql server', () => {
     });
   });
 
-  fit('can create a server instance with supertest', (done) => {
+  it('can create a server instance with supertest', (done) => {
     const app = express();
     mockCtx.prisma.user.findMany.mockResolvedValue([
       {

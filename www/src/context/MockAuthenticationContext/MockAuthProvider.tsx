@@ -12,17 +12,14 @@ import { AuthContext } from '../AuthenticationContext/types';
 // eslint-disable-next-line react/prop-types
 
 interface MockAuthProviderProps {
-  origin?: string;
-  children?: JSX.Element;
+  children?: React.ReactNode;
   user?: string;
 }
 
-export const MockAuthProvider = (props: MockAuthProviderProps): JSX.Element => {
-  const { origin, children, user } = props;
+export const MockAuthProvider = ({
+  children,
+  user,
+}: MockAuthProviderProps): JSX.Element => {
   const auth = useProvideMockAuth(user) as AuthContext;
-  return (
-    <AuthProvider origin={origin} provider={auth}>
-      {children}
-    </AuthProvider>
-  );
+  return <AuthProvider provider={auth}>{children}</AuthProvider>;
 };

@@ -5,15 +5,18 @@ Object {
   "all": Array [
     Object {
       "message": "",
+      "open": true,
       "updateMessage": [Function],
     },
     Object {
       "message": "test",
+      "open": true,
       "updateMessage": [Function],
     },
   ],
   "current": Object {
     "message": "test",
+    "open": true,
     "updateMessage": [Function],
   },
   "error": undefined,

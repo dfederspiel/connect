@@ -3,6 +3,7 @@ import {
   AuthenticationResult,
   PublicClientApplication,
 } from '@azure/msal-browser';
+import { waitFor } from '@testing-library/react';
 import { AuthModule, Mode } from '../AuthModule';
 
 describe('the auth module', () => {
@@ -209,7 +210,27 @@ describe('the auth module', () => {
 
     describe('when the response throws an exception', () => {
       describe('when the error indicates password reset', () => {
-        it('will redirect the user to the appropriate flow', () => {
+        afterEach(jest.clearAllMocks);
+        it('will redirect the user to the appropriate flow', async () => {
+          jest
+            .spyOn(PublicClientApplication.prototype, 'handleRedirectPromise')
+            .mockImplementation(() =>
+              Promise.reject({
+                errorMessage: 'AADB2C90118',
+              }),
+            );
+          const spy = jest
+            .spyOn(PublicClientApplication.prototype, 'loginRedirect')
+            .mockImplementation(() => Promise.resolve());
+
+          const authModule = new AuthModule(Mode.Client);
+          expect(authModule).toBeDefined();
+          await waitFor(() => {
+            expect(spy).toHaveBeenCalledTimes(1);
+          });
+        });
+
+        it('will log errors if the redirect fails', async () => {
           jest
             .spyOn(PublicClientApplication.prototype, 'handleRedirectPromise')
             .mockImplementation(() =>
@@ -218,11 +239,29 @@ describe('the auth module', () => {
               }),
             );
           jest
+            .spyOn(PublicClientApplication.prototype, 'getAllAccounts')
+            .mockImplementation(
+              () =>
+                [
+                  {
+                    name: 'David Federspiel',
+                    username: 'david@federnet.com',
+                  },
+                ] as AccountInfo[],
+            );
+          const spy = jest
             .spyOn(PublicClientApplication.prototype, 'loginRedirect')
-            .mockImplementation(() => Promise.resolve());
+            .mockImplementation(() =>
+              Promise.reject({
+                errorMessage: 'AADB2C90118',
+              }),
+            );
 
           const authModule = new AuthModule(Mode.Client);
           expect(authModule).toBeDefined();
+          await waitFor(() => {
+            expect(spy).toHaveBeenCalledTimes(1);
+          });
         });
       });
 

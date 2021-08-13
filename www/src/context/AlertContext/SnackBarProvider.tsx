@@ -2,16 +2,17 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import { SnackBarType } from './SnackBarType';
 
-const snackBarContext = createContext<SnackBarType>({
-  message: '',
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  updateMessage: () => {},
-});
+const snackBarContext = createContext<SnackBarType>(null as unknown as SnackBarType);
+interface SnackBarProviderProps {
+  children: JSX.Element;
+  timeout: number;
+}
 
 // export const snackBarContext = createContext<SnackBarType>({message: '', updateMessage: () => {}});
 export const SnackBarProvider = ({
   children,
-}: JSX.ElementChildrenAttribute): JSX.Element => {
+  timeout,
+}: SnackBarProviderProps): JSX.Element => {
   const [message, setMessage] = useState('');
   const updateMessage = (m: string) => {
     setMessage(m);
@@ -21,13 +22,13 @@ export const SnackBarProvider = ({
 
   useEffect(() => {
     if (message.length > 0 && open) {
-      const timer = setTimeout(() => setOpen(false), 5000);
+      const timer = setTimeout(() => setOpen(false), timeout);
       return () => clearTimeout(timer);
     }
   });
 
   return (
-    <snackBarContext.Provider value={{ message, updateMessage }}>
+    <snackBarContext.Provider value={{ open, message, updateMessage }}>
       {children}
       {message.length > 0 && (
         <Snackbar
