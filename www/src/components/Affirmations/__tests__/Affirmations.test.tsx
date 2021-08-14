@@ -28,7 +28,10 @@ const affirmationMock = {
     },
   },
   result: {
-    data: {},
+    data: {
+      from: 1,
+      to: 2,
+    },
   },
 } as MockedResponse;
 

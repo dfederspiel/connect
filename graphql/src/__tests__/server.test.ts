@@ -61,7 +61,10 @@ describe('the graphql server', () => {
       console.log('Server started...querying...');
       baseURL
         .post('/graphql')
-        .set('Authorization', 'bad token')
+        .set({
+          Authorization: 'Token 1234567890',
+          'Content-Type': 'application/json',
+        })
         .send({ query: '{ users { id } }' })
         .expect(200)
         .end((err, res) => {

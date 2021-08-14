@@ -76,14 +76,10 @@ export default class GraphQLServer {
           let user;
           if (token) {
             try {
-              //console.info("[ACCESS TOKEN]", token)
               const decoded = await this.authContext.decode(token);
-              console.log('[TOKEN INFO]', decoded, token);
               user = await this.authContext.getUser(decoded);
-              //console.log('[USER CONTEXT]', user)
             } catch (ex) {
-              //console.error("[X0001]", ex.message);
-              //throw new AuthenticationError("you must be logged in");
+              console.error('[X0001]', ex);
             }
           }
 
@@ -99,21 +95,14 @@ export default class GraphQLServer {
       subscriptions: {
         onConnect: async (connectionParams: any, webSocket) => {
           let user;
-          try {
-            if (connectionParams.authToken !== null) {
-              console.log('[TOKEN INFO]', connectionParams.authToken);
-              const decoded = await this.authContext.decode(connectionParams.authToken);
-              console.log('[TOKEN INFO]', decoded, connectionParams.authToken);
-              user = await this.authContext.getUser(decoded);
-              return {
-                user: user,
-              };
-            }
-          } catch (ex) {
-            console.error(ex);
+
+          if (connectionParams.authToken !== undefined) {
+            const decoded = await this.authContext.decode(connectionParams.authToken);
+            user = await this.authContext.getUser(decoded);
           }
+
           return {
-            currentUser: null,
+            user,
           };
         },
       },

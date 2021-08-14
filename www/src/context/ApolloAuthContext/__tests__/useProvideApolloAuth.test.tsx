@@ -6,8 +6,8 @@ import { useProvideApolloAuth } from '../useProvideApolloAuth';
 import 'cross-fetch/polyfill';
 
 beforeAll(() => {
-  process.env.APOLLO_HOST = 'http://localhost/graphql';
-  process.env.APOLLO_WS_HOST = 'ws://localhost/ws';
+  process.env.APOLLO_HOST = 'http://localhost:9000/graphql';
+  process.env.APOLLO_WS_HOST = 'ws://localhost:9000/graphql';
 });
 
 describe('the apollo auth context', () => {
@@ -49,6 +49,44 @@ describe('the apollo auth context', () => {
         }
       `,
     });
-    expect(response).toBeDefined();
+    expect(response).toMatchSnapshot();
   });
+
+  // it('can append tokens to websocket connections', (done) => {
+  //   const { result } = renderHook(() => useProvideApolloAuth(), { wrapper });
+
+  //   const wsresponse = result.current.client
+  //     .subscribe({
+  //       query: AFFIRMATION_GIVEN_SUBSCRIPTION,
+  //       variables: { userId: 1 },
+  //     })
+  //     .subscribe({
+  //       next({ data }) {
+  //         expect(data.somethingChanged).toEqual('finally');
+  //         done();
+  //       },
+  //     });
+
+  //   const response = result.current.client.link.request({
+  //     operationName: 'subscription',
+  //     query: AFFIRMATION_GIVEN_SUBSCRIPTION,
+  //     variables: { userId: 1 },
+  //     extensions: {},
+  //     getContext: (): Record<string, any> => {
+  //       return {};
+  //     },
+  //     setContext: (): Record<string, any> => {
+  //       return {};
+  //     },
+  //   });
+
+  //   setTimeout(() => {
+  //     pubsub.publish('AFFIRMATION_GIVEN', {
+  //       from: 1,
+  //       to: 2,
+  //     });
+  //   }, 100);
+  //   // expect(response).toMatchSnapshot();
+  //   expect(wsresponse).toMatchSnapshot();
+  // });
 });
