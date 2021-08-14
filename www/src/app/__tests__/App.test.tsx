@@ -1,5 +1,6 @@
 import { act, fireEvent, render } from '@testing-library/react';
 import App from '../App';
+import 'cross-fetch/polyfill';
 
 beforeAll(() => {
   process.env.APOLLO_HOST = 'http://localhost/graphql';

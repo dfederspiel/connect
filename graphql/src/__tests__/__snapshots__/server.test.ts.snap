@@ -19,3 +19,5 @@ Object {
   },
 }
 `;
+
+exports[`the graphql server requires authentication if in production 1`] = `[AuthenticationError: you must be logged in]`;

@@ -61,7 +61,10 @@ describe('the graphql server', () => {
       console.log('Server started...querying...');
       baseURL
         .post('/graphql')
-        .set('Authorization', 'bad token')
+        .set({
+          Authorization: 'Token 1234567890',
+          'Content-Type': 'application/json',
+        })
         .send({ query: '{ users { id } }' })
         .expect(200)
         .end((err, res) => {
@@ -93,5 +96,25 @@ describe('the graphql server', () => {
       `,
     });
     expect(result).toMatchSnapshot();
+  });
+
+  it('requires authentication if in production', async () => {
+    process.env.NODE_ENV = 'production';
+    const apollo = new GraphQLServer(pubsub, false, mockCtx.prisma);
+    const instance = apollo.server();
+    instance
+      .executeOperation({
+        query: gql`
+          {
+            users {
+              id
+              email
+            }
+          }
+        `,
+      })
+      .catch((err) => {
+        expect(err).toMatchSnapshot();
+      });
   });
 });
