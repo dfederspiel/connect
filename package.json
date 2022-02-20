@@ -34,7 +34,7 @@
     "nodemon": "^2.0.12",
     "npm-run-all": "^4.1.5",
     "prettier": "2.3.2",
-    "prisma": "2.29.0",
+    "prisma": "^2.30.3",
     "subscriptions-transport-ws": "^0.9.19",
     "supertest": "^6.1.4",
     "ts-jest": "^27.0.4",
@@ -44,7 +44,7 @@
     "ws": "^8.1.0"
   },
   "dependencies": {
-    "@prisma/client": "^2.29.0",
+    "@prisma/client": "^2.30.3",
     "@types/jsonwebtoken": "^8.5.4",
     "graphql": "^15.5.1",
     "jsonwebtoken": "^8.5.1",
@@ -52,9 +52,9 @@
   },
   "scripts": {
     "setup": "npm-run-all setup:*",
-    "setup:www": "cd www && yarn install",
-    "setup:graphql": "cd graphql && yarn install",
-    "setup:api": "cd api && yarn install",
+    "setup:www": "cd www && npm install",
+    "setup:graphql": "cd graphql && npm install",
+    "setup:api": "cd api && npm install",
     "setup:generate": "prisma generate",
     "lint": "eslint .",
     "generate": "prisma generate",
