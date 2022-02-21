@@ -19,6 +19,7 @@ services:
     volumes:
       - ./prisma:/usr/src/app/prisma
       - ./graphql/src:/usr/src/app/graphql/src
+      - ./graphql/index.ts:/usr/src/app/graphql/index.ts
     ports:
       - 8080:4000
     command: [bash, -c, "cd graphql && npm start"]
