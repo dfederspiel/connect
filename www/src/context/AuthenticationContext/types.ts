@@ -1,3 +1,5 @@
+import { AuthStatus } from './useProvideAuth';
+
 type Policy = {
   policyId: number;
   url: string;
@@ -9,6 +11,7 @@ type UserProfile = {
 };
 
 type AuthContext = {
+  status: AuthStatus;
   user: string | undefined;
   signin(): void;
   signout(): void;
