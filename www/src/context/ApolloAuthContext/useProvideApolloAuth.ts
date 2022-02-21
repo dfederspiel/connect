@@ -13,14 +13,16 @@ import { OperationDefinitionNode, print } from 'graphql';
 import { useAuth } from '../AuthenticationContext';
 import { ApolloAuthContext } from './types';
 import { createClient, ClientOptions, Client } from 'graphql-ws';
+import { AuthStatus } from '../AuthenticationContext/useProvideAuth';
 
-export const useProvideApolloAuth = (): ApolloAuthContext => {
+export const useProvideApolloAuth = (): ApolloAuthContext | undefined => {
+  const auth = useAuth();
+
+  if (auth.status !== AuthStatus.Authenticated) return;
+
   const { hostname, port, protocol } = window.location;
   const portString = port !== '' ? `:${port}` : port;
-  const auth = useAuth();
-  // const httpLink = createHttpLink({
-  //   uri: `${process.env.APOLLO_HOST}`,
-  // });
+
   const httpLink: ApolloLink = new HttpLink({
     uri: `${protocol}//${hostname}${portString}${process.env.APOLLO_HOST}`,
   });
@@ -35,18 +37,6 @@ export const useProvideApolloAuth = (): ApolloAuthContext => {
       },
     };
   });
-
-  // const wsLink = new WebSocketLink({
-  //   uri: `${process.env.APOLLO_WS_HOST}`,
-  //   options: {
-  //     reconnect: true,
-  //     connectionParams: async (): Promise<ConnectionParams> => {
-  //       const token = await auth.token();
-  //       console.log('GRAPHQL WS', token);
-  //       return { authToken: token, test: 'some_other_thing' };
-  //     },
-  //   },
-  // });
 
   class WebSocketLink extends ApolloLink {
     private client: Client;
