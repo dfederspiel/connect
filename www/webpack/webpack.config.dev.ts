@@ -37,7 +37,14 @@ const config: Configuration = {
     publicPath: '/',
   },
   plugins: [
-    new ReactRefreshWebpackPlugin(),
+    new ReactRefreshWebpackPlugin({
+      overlay: {
+        sockHost: 'localhost',
+        sockPort: 80,
+        sockProtocol: 'ws',
+        sockPath: '/ws',
+      },
+    }),
     new Dotenv({
       path: 'config.development.env',
     }),

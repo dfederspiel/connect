@@ -35,9 +35,6 @@ const config: webpack.Configuration = {
               exclude: /node_modules/,
               cacheDirectory: true,
               presets: ['@babel/react', ['@babel/preset-env', { targets: 'defaults' }]],
-              plugins: [isDevelopment && require.resolve('react-refresh/babel')].filter(
-                Boolean,
-              ),
             },
           },
         ],
