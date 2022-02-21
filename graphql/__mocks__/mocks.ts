@@ -1,7 +1,6 @@
 import { User } from '@prisma/client';
-import { IMocks, MockList } from 'apollo-server-express';
-import faker from 'faker';
-
+import { IMocks, MockList } from '@graphql-tools/mock';
+import { faker } from '@faker-js/faker';
 export interface IConnectMocks extends IMocks {
   User(): User;
 }

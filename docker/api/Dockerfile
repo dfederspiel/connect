@@ -5,15 +5,15 @@ WORKDIR /usr/src/app
 RUN npm install -g typescript nodemon ts-node prisma
 
 COPY ./package.json .
-COPY ./yarn.lock .
+COPY ./package-lock.json .
 COPY ./tsconfig.json .
 COPY ./prisma ./prisma
 COPY ./lib ./lib
-RUN yarn install
+RUN npm install
 RUN prisma generate
 COPY ./api ./api
-RUN cd api && yarn install
+RUN cd api && npm install
 
 EXPOSE 3000
 
-CMD ["bash", "-c", "cd api && yarn run start:production"]
+CMD ["bash", "-c", "cd api && npm run start:production"]

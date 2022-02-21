@@ -5,12 +5,12 @@ RUN npm install -g typescript nodemon ts-node prisma
 WORKDIR /usr/src/app
 
 COPY ./package.json .
-COPY ./yarn.lock .
+COPY ./package-lock.json .
 COPY ./prisma ./prisma
-RUN yarn install
+RUN npm install
 COPY ./www ./www
-RUN cd www && yarn install && yarn run build
+RUN cd www && npm install && npm run build
 
 EXPOSE 80
 
-CMD ["bash", "-c", "cd www && yarn run start:production"]
+CMD ["bash", "-c", "cd www && npm run start:production"]

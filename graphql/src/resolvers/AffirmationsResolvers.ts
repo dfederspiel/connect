@@ -1,5 +1,7 @@
 import { User } from '@prisma/client';
-import { gql, withFilter } from 'apollo-server-express';
+import { gql } from 'apollo-server-express';
+import { withFilter } from 'graphql-subscriptions';
+import { IResolvers } from '@graphql-tools/utils';
 import { IPubSub } from '../lib/types';
 
 const AFFIRMATION_GIVEN = 'AFFIRMATION_GIVEN';
@@ -36,7 +38,7 @@ interface IAffirmationsSubscriptionResolvers {
     subscribe(): any;
   };
 }
-interface IAffirmationsResolvers {
+interface IAffirmationsResolvers extends IResolvers {
   Mutation: IAffirmationsMutationResolvers;
   Subscription: IAffirmationsSubscriptionResolvers;
 }

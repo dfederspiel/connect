@@ -1,5 +1,6 @@
+import { IResolvers } from '@graphql-tools/utils';
 import { User } from '@prisma/client';
-import { gql, IResolvers } from 'apollo-server-express';
+import { gql } from 'apollo-server-express';
 import UserDataSource from '../datasources/UsersDataSource';
 
 export const UsersTypeDefs = gql`
@@ -19,7 +20,7 @@ interface IUserResolversQuery {
   user(parent: any, args: any, context: any, other: any): Promise<User | null>;
   users(parent: any, args: any, context: any, other: any): Promise<User[]>;
 }
-interface IUserResolvers {
+interface IUserResolvers extends IResolvers {
   Query: IUserResolversQuery;
 }
 
