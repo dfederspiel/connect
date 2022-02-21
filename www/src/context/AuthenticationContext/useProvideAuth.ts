@@ -2,11 +2,20 @@ import { useState } from 'react';
 import { AuthContext } from './types';
 import { AuthModule } from './AuthModule';
 
+export enum AuthStatus {
+  Unauthenticated,
+  Authenticated,
+}
+
 export const useProvideAuth = (auth: AuthModule): AuthContext => {
+  const [status, setStatus] = useState<AuthStatus>(AuthStatus.Unauthenticated);
   const [user, setUser] = useState<string | undefined>(auth?.account?.name);
 
   auth.onAccount((user?: string) => {
-    if (user) setUser(user);
+    if (user) {
+      setUser(user);
+      setStatus(AuthStatus.Authenticated);
+    }
   });
 
   const signin = async (): Promise<void> => {
@@ -26,6 +35,7 @@ export const useProvideAuth = (auth: AuthModule): AuthContext => {
   };
 
   return {
+    status,
     user,
     signin,
     token,
