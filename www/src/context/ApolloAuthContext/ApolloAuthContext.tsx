@@ -1,5 +1,6 @@
 import { useProvideApolloAuth } from './useProvideApolloAuth';
 import { ApolloProvider } from '@apollo/client';
+import User from '../../components/User';
 
 // Provider component that wraps the Apollo client.
 // This is necessary because we will need auth context
@@ -11,7 +12,11 @@ export const ApolloAuthProvider = ({
   children,
 }: JSX.ElementChildrenAttribute): JSX.Element => {
   const apolloAuth = useProvideApolloAuth();
-  return <ApolloProvider client={apolloAuth.client}>{children}</ApolloProvider>;
+  return (
+    (apolloAuth?.client && (
+      <ApolloProvider client={apolloAuth.client}>{children}</ApolloProvider>
+    )) || <User />
+  );
 };
 
 // We will never "useProvideApolloAuth" in a component, so we don't need to export it
