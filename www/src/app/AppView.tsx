@@ -20,6 +20,8 @@ import { Link, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 // import { AFFIRMATION_GIVEN_SUBSCRIPTION } from '../graphql/subscriptions';
 import HomePage from '../pages/Home';
 import User from '../components/User';
+import { useSnacks } from '../context/AlertContext/SnackBarProvider';
+import { AFFIRMATION_GIVEN_SUBSCRIPTION } from '../graphql/subscriptions';
 
 const AppView = (): JSX.Element => {
   const [open, setOpen] = useState(false);
@@ -32,14 +34,13 @@ const AppView = (): JSX.Element => {
     setOpen(false);
   };
 
-  // const snacks = useSnacks();
+  const snacks = useSnacks();
 
-  // useSubscription(AFFIRMATION_GIVEN_SUBSCRIPTION, {
-  //   onSubscriptionData: ({ subscriptionData }) => {
-  //     snacks.updateMessage('Affirmation Given!!');
-  //   },
-  // });
-
+  useSubscription(AFFIRMATION_GIVEN_SUBSCRIPTION, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      snacks.updateMessage('Affirmation Given!!');
+    },
+  });
   return (
     <Container>
       <AppBar position="fixed">
@@ -81,12 +82,12 @@ const AppView = (): JSX.Element => {
             </List>
           </Drawer>
           <Routes>
-            <Route path="/" element={HomePage} />
+            <Route path="/" element={<HomePage />} />
           </Routes>
         </Router>
       </Grid>
       <Typography style={{ textAlign: 'center' }}>
-        Connect © 2020 created by david federspiel
+        Connect © 2020 created by David Federspiel
       </Typography>
     </Container>
   );
