@@ -23,21 +23,6 @@ export const useProvideApolloAuth = (): ApolloAuthContext | undefined => {
   const { hostname, port, protocol } = window.location;
   const portString = port !== '' ? `:${port}` : port;
 
-  const httpLink: ApolloLink = new HttpLink({
-    uri: `${protocol}//${hostname}${portString}${process.env.APOLLO_HOST}`,
-  });
-
-  const authLink = setContext(async (_, { headers }) => {
-    const token = await auth.token();
-    console.log('GRAPHQL HTTP', token);
-    return {
-      headers: {
-        ...headers,
-        authorization: token ? `Bearer ${token}` : '',
-      },
-    };
-  });
-
   class WebSocketLink extends ApolloLink {
     private client: Client;
 
@@ -63,23 +48,14 @@ export const useProvideApolloAuth = (): ApolloAuthContext | undefined => {
     // eslint-disable-next-line prettier/prettier
     `${protocol === 'https:' ? 'wss:' : 'ws:'}//${hostname}${portString}${process.env.APOLLO_HOST}`,
   );
-  const wsLink = new WebSocketLink({
+  const link = new WebSocketLink({
     // eslint-disable-next-line prettier/prettier
     url: `${protocol === 'https:' ? 'wss:' : 'ws:'}//${hostname}${portString}${process.env.APOLLO_HOST}`,
     connectionParams: async () => {
       const token = await auth.token();
-      return { authToken: token, test: 'some_other_thing' };
+      return { authorization: token, test: 'some_other_thing' };
     },
   });
-
-  const link = split(
-    ({ query }) => {
-      const { kind, operation } = getMainDefinition(query) as OperationDefinitionNode;
-      return kind === 'OperationDefinition' && operation === 'subscription';
-    },
-    wsLink,
-    authLink.concat(httpLink),
-  );
 
   const client = new ApolloClient({
     link,

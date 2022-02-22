@@ -15,6 +15,34 @@ import { rootTypeDefs } from './src/server';
 import { AffirmationsTypeDefs } from './src/resolvers/AffirmationsResolvers';
 import { UsersTypeDefs } from './src/resolvers/UsersResolvers';
 import resolvers from './src/resolvers';
+import { ApolloServer } from 'apollo-server-express';
+
+// import { GraphQLObjectType, GraphQLSchema, GraphQLString } from 'graphql';
+// export const schema = new GraphQLSchema({
+//   query: new GraphQLObjectType({
+//     name: 'Query',
+//     fields: {
+//       hello: {
+//         type: GraphQLString,
+//         resolve: () => 'world',
+//       },
+//     },
+//   }),
+//   subscription: new GraphQLObjectType({
+//     name: 'Subscription',
+//     fields: {
+//       greetings: {
+//         type: GraphQLString,
+//         subscribe: async function* (a, b, c) {
+//           console.log('SUBSCRIPTION', a, b, c);
+//           for (const hi of ['Hi', 'Bonjour', 'Hola', 'Ciao', 'Zdravo']) {
+//             yield { greetings: hi };
+//           }
+//         },
+//       },
+//     },
+//   }),
+// });
 
 console.log(test('GRAPHQL'));
 (async () => {
@@ -58,7 +86,39 @@ console.log(test('GRAPHQL'));
       path: '/graphql',
     });
 
-    useServer({ schema }, wsServer);
+    useServer(
+      {
+        schema,
+        onConnect: async (ctx) => {
+          console.log('CONNECTED', ctx.connectionParams?.test);
+        },
+        onOperation: async (ctx) => {
+          console.log('OPERATION', ctx.connectionParams?.test);
+        },
+        onSubscribe: async (ctx) => {
+          console.log('SUBSCRIPTION', ctx.connectionParams?.test);
+        },
+        context: async (ctx, msg, args) => {
+          console.log('ADDING CONTEXT FOR WS');
+          const token = ctx?.connectionParams?.authorization as string | undefined;
+          let user;
+          if (token) {
+            try {
+              const decoded = await graphQlServer.authContext.decode(token);
+              user = await graphQlServer.authContext.getUser(decoded);
+            } catch (ex) {
+              console.error('[X0001]', ex);
+            }
+          }
+          console.log('GETTING CONTEXT', user, token);
+          return {
+            user,
+            dataSources: graphQlServer.datasources,
+          };
+        },
+      },
+      wsServer,
+    );
     console.log(
       `GraphQL Playground ready at http://localhost:${port}${apollo.graphqlPath}`,
     );

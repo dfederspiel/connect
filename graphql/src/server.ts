@@ -5,7 +5,6 @@ import UserDataSource from './datasources/UsersDataSource';
 import { IMocks } from '@graphql-tools/mock';
 import { IPubSub } from './lib/types';
 import { PrismaClient } from '@prisma/client';
-import { DocumentNode } from 'graphql/language';
 import { AuthContext } from '@lib/auth/AuthContext';
 import { GraphQLSchema } from 'graphql';
 
@@ -32,7 +31,7 @@ export default class GraphQLServer {
   datasources: DataSources<IDataSources>;
   mocks: IMocks | boolean;
   private dataContext: UserDataContext;
-  private authContext: AuthContext;
+  authContext: AuthContext;
 
   constructor(
     schema: GraphQLSchema,
@@ -44,9 +43,9 @@ export default class GraphQLServer {
     this.client = client || new PrismaClient();
     this.dataContext = new UserDataContext(this.client);
     this.authContext = new AuthContext(this.dataContext);
-    // this.datasources = {
-    //   userApi: new UserDataSource(new UserDataContext(this.client)),
-    // };
+    this.datasources = {
+      userApi: new UserDataSource(new UserDataContext(this.client)),
+    };
     this.mocks = mocks;
     // this.typeDefs = [AffirmationsTypeDefs, UsersTypeDefs];
     // this.resolvers = [
@@ -64,6 +63,7 @@ export default class GraphQLServer {
       mocks: this.mocks,
       context: async ({ req }) => {
         // get the user token from the headers
+        console.log('ADDING CONTEXT FOR POST');
         const token = req?.headers?.authorization?.split(' ')[1];
         let user;
         if (token) {
@@ -80,6 +80,7 @@ export default class GraphQLServer {
         if (process.env.NODE_ENV === 'production')
           if (!user) throw new AuthenticationError('you must be logged in');
 
+        console.log('USER CONTEXT', user);
         // add the user to the context
         return { user };
       },

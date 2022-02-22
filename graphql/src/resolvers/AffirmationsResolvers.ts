@@ -56,6 +56,8 @@ export default class AffirmationsResolvers {
     return {
       Mutation: {
         sendAffirmation: async (_: any, { userId }: any, context: { user: User }) => {
+          console.log('WEBSOCKET SEND', _, userId, context.user);
+
           const affirmation = {
             from: context.user.id,
             to: userId,
@@ -69,6 +71,7 @@ export default class AffirmationsResolvers {
           subscribe: withFilter(
             () => this.pubsub.asyncIterator('AFFIRMATION_GIVEN'),
             (payload, _args, context) => {
+              console.log('WEBSOCKET SUBSCRIBE', payload, _args, context);
               return parseInt(payload.to) === context.user.id;
             },
           ),

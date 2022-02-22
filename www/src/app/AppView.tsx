@@ -16,8 +16,6 @@ import HomeIcon from '@material-ui/icons/Home';
 import MenuIcon from '@material-ui/icons/Menu';
 import { useState } from 'react';
 import { Link, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-// import { useSnacks } from '../context/AlertContext/SnackBarProvider';
-// import { AFFIRMATION_GIVEN_SUBSCRIPTION } from '../graphql/subscriptions';
 import HomePage from '../pages/Home';
 import User from '../components/User';
 import { useSnacks } from '../context/AlertContext/SnackBarProvider';
@@ -38,6 +36,7 @@ const AppView = (): JSX.Element => {
 
   useSubscription(AFFIRMATION_GIVEN_SUBSCRIPTION, {
     onSubscriptionData: ({ subscriptionData }) => {
+      console.log(subscriptionData);
       snacks.updateMessage('Affirmation Given!!');
     },
   });
@@ -87,7 +86,7 @@ const AppView = (): JSX.Element => {
         </Router>
       </Grid>
       <Typography style={{ textAlign: 'center' }}>
-        Connect © 2020 created by David Federspiel
+        Connect © 2022 created by David Federspiel
       </Typography>
     </Container>
   );
