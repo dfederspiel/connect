@@ -16,6 +16,8 @@ import { AffirmationsTypeDefs } from './src/resolvers/AffirmationsResolvers';
 import { UsersTypeDefs } from './src/resolvers/UsersResolvers';
 import resolvers from './src/resolvers';
 import { ApolloServer } from 'apollo-server-express';
+import { ArticlesTypeDefs } from './src/resolvers/ArticlesResolvers';
+import { User } from '@prisma/client';
 
 // import { GraphQLObjectType, GraphQLSchema, GraphQLString } from 'graphql';
 // export const schema = new GraphQLSchema({
@@ -65,7 +67,7 @@ console.log(test('GRAPHQL'));
   const mocks: boolean | IMocks = process.env.USE_MOCKS === 'true' ? DataMocks : false;
 
   const schema = makeExecutableSchema({
-    typeDefs: [rootTypeDefs, AffirmationsTypeDefs, UsersTypeDefs],
+    typeDefs: [rootTypeDefs, AffirmationsTypeDefs, ArticlesTypeDefs, UsersTypeDefs],
     resolvers: resolvers(pubsub),
   });
   const graphQlServer = new GraphQLServer(schema, pubsub, mocks);
@@ -100,6 +102,15 @@ console.log(test('GRAPHQL'));
               console.error('[X0001]', ex);
             }
           }
+
+          if (!user && process.env.NODE_ENV === 'development') {
+            user = {
+              id: 1,
+              domain: 'federnet.com',
+              email: 'david@federnet.com',
+            } as User;
+          }
+
           return {
             user,
             dataSources: graphQlServer.datasources,

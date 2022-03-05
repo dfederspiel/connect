@@ -5,6 +5,7 @@ services:
   graphql:
     image: codefly.azurecr.io/graphql:latest
     environment:
+      NODE_ENV: development
       DATABASE_URL: postgres://user:postgres@postgres:5432/db
       B2C_AUTHORITY: https://codeflyb2c.b2clogin.com/codeflyb2c.onmicrosoft.com
       B2C_LOGIN_POLICY: B2C_1_CASpR

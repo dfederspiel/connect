@@ -4,7 +4,7 @@ import UserDataContext from './data/UserDataContext';
 import UserDataSource from './datasources/UsersDataSource';
 import { IMocks } from '@graphql-tools/mock';
 import { IPubSub } from './lib/types';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, User } from '@prisma/client';
 import { AuthContext } from '@lib/auth/AuthContext';
 import { GraphQLSchema } from 'graphql/type/schema';
 
@@ -79,6 +79,14 @@ export default class GraphQLServer {
         // we could also check user roles/permissions here
         if (process.env.NODE_ENV === 'production')
           if (!user) throw new AuthenticationError('you must be logged in');
+
+        if (!token && process.env.NODE_ENV === 'development') {
+          user = {
+            id: 1,
+            domain: 'federnet.com',
+            email: 'david@federnet.com',
+          } as User;
+        }
 
         console.log('USER CONTEXT', user);
         // add the user to the context

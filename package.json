@@ -56,9 +56,10 @@
     "setup:www": "cd www && npm install",
     "setup:graphql": "cd graphql && npm install",
     "setup:api": "cd api && npm install",
-    "setup:generate": "prisma generate",
+    "setup:generate": "npm run generate",
     "lint": "eslint .",
     "generate": "prisma generate",
+    "migrate": "prisma migrate dev",
     "test": "jest --coverage --runInBand --watchAll --verbose",
     "test:ci": "jest --coverage --runInBand"
   }
