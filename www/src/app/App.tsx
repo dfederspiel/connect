@@ -6,13 +6,13 @@ import AppView from './AppView';
 
 const App = (): JSX.Element => {
   return (
-    <SnackBarProvider timeout={5000}>
-      <AuthProvider>
-        <ApolloAuthProvider>
+    <AuthProvider>
+      <ApolloAuthProvider>
+        <SnackBarProvider timeout={5000}>
           <AppView />
-        </ApolloAuthProvider>
-      </AuthProvider>
-    </SnackBarProvider>
+        </SnackBarProvider>
+      </ApolloAuthProvider>
+    </AuthProvider>
   );
 };
 

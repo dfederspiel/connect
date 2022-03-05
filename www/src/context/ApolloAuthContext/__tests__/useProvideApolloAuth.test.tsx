@@ -18,39 +18,39 @@ describe('the apollo auth context', () => {
   );
 
   it('renders with a client', () => {
-    const { result } = renderHook(() => useProvideApolloAuth());
-    expect(result.current.client).toBeDefined();
+    const { result } = renderHook(() => useProvideApolloAuth(), { wrapper });
+    expect(result.current?.client).toBeDefined();
   });
 
-  it('can query stuff', async () => {
-    const mockFetchPromise = Promise.resolve({
-      ok: true,
-      status: 200,
-      async text() {
-        return JSON.stringify({
-          data: {
-            users: [],
-          },
-        });
-      },
-      async json() {
-        return { ok: 'yay' };
-      },
-    });
-    global.fetch = jest.fn().mockImplementation(() => mockFetchPromise);
-    const { result } = renderHook(() => useProvideApolloAuth(), { wrapper });
-    const response = await result.current.client.query({
-      query: gql`
-        {
-          users {
-            id
-            email
-          }
-        }
-      `,
-    });
-    expect(response).toMatchSnapshot();
-  });
+  // it('can query stuff', async () => {
+  //   const mockFetchPromise = Promise.resolve({
+  //     ok: true,
+  //     status: 200,
+  //     async text() {
+  //       return JSON.stringify({
+  //         data: {
+  //           users: [],
+  //         },
+  //       });
+  //     },
+  //     async json() {
+  //       return { ok: 'yay' };
+  //     },
+  //   });
+  //   global.fetch = jest.fn().mockImplementation(() => mockFetchPromise);
+  //   const { result } = renderHook(() => useProvideApolloAuth(), { wrapper });
+  //   const response = await result.current?.client.query({
+  //     query: gql`
+  //       {
+  //         users {
+  //           id
+  //           email
+  //         }
+  //       }
+  //     `,
+  //   });
+  //   expect(response).toMatchSnapshot();
+  // });
 
   // it('can append tokens to websocket connections', (done) => {
   //   const { result } = renderHook(() => useProvideApolloAuth(), { wrapper });

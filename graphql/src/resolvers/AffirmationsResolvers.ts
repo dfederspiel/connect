@@ -1,5 +1,7 @@
 import { User } from '@prisma/client';
-import { gql, withFilter } from 'apollo-server-express';
+import { gql } from 'apollo-server-express';
+import { withFilter } from 'graphql-subscriptions';
+import { IResolvers } from '@graphql-tools/utils';
 import { IPubSub } from '../lib/types';
 
 const AFFIRMATION_GIVEN = 'AFFIRMATION_GIVEN';
@@ -36,7 +38,7 @@ interface IAffirmationsSubscriptionResolvers {
     subscribe(): any;
   };
 }
-interface IAffirmationsResolvers {
+interface IAffirmationsResolvers extends IResolvers {
   Mutation: IAffirmationsMutationResolvers;
   Subscription: IAffirmationsSubscriptionResolvers;
 }
@@ -54,6 +56,8 @@ export default class AffirmationsResolvers {
     return {
       Mutation: {
         sendAffirmation: async (_: any, { userId }: any, context: { user: User }) => {
+          console.log('WEBSOCKET SEND', _, userId, context.user);
+
           const affirmation = {
             from: context.user.id,
             to: userId,
@@ -67,6 +71,7 @@ export default class AffirmationsResolvers {
           subscribe: withFilter(
             () => this.pubsub.asyncIterator('AFFIRMATION_GIVEN'),
             (payload, _args, context) => {
+              console.log('WEBSOCKET SUBSCRIBE', payload, _args, context);
               return parseInt(payload.to) === context.user.id;
             },
           ),

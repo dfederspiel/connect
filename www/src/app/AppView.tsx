@@ -15,11 +15,11 @@ import {
 import HomeIcon from '@material-ui/icons/Home';
 import MenuIcon from '@material-ui/icons/Menu';
 import { useState } from 'react';
-import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom';
-// import { useSnacks } from '../context/AlertContext/SnackBarProvider';
-// import { AFFIRMATION_GIVEN_SUBSCRIPTION } from '../graphql/subscriptions';
+import { Link, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import HomePage from '../pages/Home';
 import User from '../components/User';
+import { useSnacks } from '../context/AlertContext/SnackBarProvider';
+import { AFFIRMATION_GIVEN_SUBSCRIPTION } from '../graphql/subscriptions';
 
 const AppView = (): JSX.Element => {
   const [open, setOpen] = useState(false);
@@ -32,14 +32,14 @@ const AppView = (): JSX.Element => {
     setOpen(false);
   };
 
-  // const snacks = useSnacks();
+  const snacks = useSnacks();
 
-  // useSubscription(AFFIRMATION_GIVEN_SUBSCRIPTION, {
-  //   onSubscriptionData: ({ subscriptionData }) => {
-  //     snacks.updateMessage('Affirmation Given!!');
-  //   },
-  // });
-
+  useSubscription(AFFIRMATION_GIVEN_SUBSCRIPTION, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      console.log(subscriptionData);
+      snacks.updateMessage('Affirmation Given!!');
+    },
+  });
   return (
     <Container>
       <AppBar position="fixed">
@@ -80,15 +80,13 @@ const AppView = (): JSX.Element => {
               <ListItem component={User} />
             </List>
           </Drawer>
-          <Switch>
-            <Route path="/">
-              <HomePage />
-            </Route>
-          </Switch>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+          </Routes>
         </Router>
       </Grid>
       <Typography style={{ textAlign: 'center' }}>
-        connect © 2020 created by david federspiel
+        Connect © 2022 created by David Federspiel
       </Typography>
     </Container>
   );

@@ -133,6 +133,7 @@ export class AuthModule {
           });
         }
         if (err.errorMessage.indexOf('AADB2C90077') > -1) {
+          console.log('AADB2C90077', err);
         }
       });
   }

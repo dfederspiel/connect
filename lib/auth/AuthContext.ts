@@ -16,15 +16,17 @@ export class AuthContext {
   }
 
   async getUser(token: any): Promise<User | null> {
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       try {
         if (!token) return null;
         const email = token.emails.length > 0 && token.emails[0];
-        let user = await this.context.getByEmail(email);
-        if (!user) {
-          user = await this.context.createUser(email);
-        }
-        resolve(user);
+        this.context.getByEmail(email).then((user) => {
+          if (!user) {
+            this.context.createUser(email).then((user) => {
+              resolve(user);
+            });
+          } else resolve(user);
+        });
       } catch (ex) {
         reject(ex);
       }

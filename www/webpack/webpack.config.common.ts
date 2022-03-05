@@ -7,6 +7,8 @@ import IgnoreNotFoundExportPlugin from './plugins/ignore-not-found-export-plugin
 
 import * as webpack from 'webpack';
 
+const isDevelopment = process.env.NODE_ENV !== 'production';
+
 const config: webpack.Configuration = {
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],

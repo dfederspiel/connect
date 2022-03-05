@@ -19,9 +19,10 @@ services:
     volumes:
       - ./prisma:/usr/src/app/prisma
       - ./graphql/src:/usr/src/app/graphql/src
+      - ./graphql/index.ts:/usr/src/app/graphql/index.ts
     ports:
       - 8080:4000
-    command: [bash, -c, "cd graphql && yarn start"]
+    command: [bash, -c, "cd graphql && npm start"]
   api:
     image: codefly.azurecr.io/api:latest
     environment:
@@ -40,7 +41,7 @@ services:
       - ./api/src:/usr/src/app/api/src
     ports:
       - 8081:3000
-    command: [bash, -c, "prisma migrate deploy --preview-feature && cd api && yarn start"]
+    command: [bash, -c, "prisma migrate deploy --preview-feature && cd api && npm start"]
   www:
     image: codefly.azurecr.io/www:latest
     build:
@@ -49,12 +50,12 @@ services:
     volumes:
       - ./www/src:/usr/src/app/www/src
     ports:
-      - 80:8080
+      - 80:80
     links:
       - graphql
     depends_on:
       - graphql
-    command: [bash, -c, "cd www && yarn start"]
+    command: [bash, -c, "cd www && npm start -- --port=80"]
   postgres:
     image: codefly.azurecr.io/postgres:latest
     environment:
