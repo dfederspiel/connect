@@ -40,11 +40,6 @@ export default class UsersResolvers {
           context: { user: User; dataSources: { userApi: UserDataSource } },
           __: any,
         ) => {
-          console.log('GETTING USER');
-          // if (!context.user)
-          //   return {
-          //     error: 'There is no user context, did you forget to pass a bearer token?',
-          //   };
           return context.dataSources.userApi.getById(context.user.id.toString());
         },
         users: (
@@ -53,8 +48,6 @@ export default class UsersResolvers {
           context: { user: User; dataSources: { userApi: UserDataSource } },
           __: any,
         ) => {
-          console.log('GETTING USERS', context);
-
           // if (!context.user)
           //   return {
           //     error: 'There is no user context, did you forget to pass a bearer token?',

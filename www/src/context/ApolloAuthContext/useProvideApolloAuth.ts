@@ -2,22 +2,18 @@ import {
   ApolloClient,
   ApolloLink,
   FetchResult,
-  HttpLink,
   InMemoryCache,
   Operation,
-  split,
 } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
-import { getMainDefinition, Observable } from '@apollo/client/utilities';
-import { OperationDefinitionNode, print } from 'graphql';
+import { Observable } from '@apollo/client/utilities';
 import { useAuth } from '../AuthenticationContext';
 import { ApolloAuthContext } from './types';
 import { createClient, ClientOptions, Client } from 'graphql-ws';
 import { AuthStatus } from '../AuthenticationContext/useProvideAuth';
+import { print } from 'graphql/language/printer';
 
 export const useProvideApolloAuth = (): ApolloAuthContext | undefined => {
   const auth = useAuth();
-
   if (auth.status !== AuthStatus.Authenticated) return;
 
   const { hostname, port, protocol } = window.location;

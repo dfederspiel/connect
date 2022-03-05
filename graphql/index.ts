@@ -89,17 +89,7 @@ console.log(test('GRAPHQL'));
     useServer(
       {
         schema,
-        onConnect: async (ctx) => {
-          console.log('CONNECTED', ctx.connectionParams?.test);
-        },
-        onOperation: async (ctx) => {
-          console.log('OPERATION', ctx.connectionParams?.test);
-        },
-        onSubscribe: async (ctx) => {
-          console.log('SUBSCRIPTION', ctx.connectionParams?.test);
-        },
-        context: async (ctx, msg, args) => {
-          console.log('ADDING CONTEXT FOR WS');
+        context: async (ctx) => {
           const token = ctx?.connectionParams?.authorization as string | undefined;
           let user;
           if (token) {
@@ -110,7 +100,6 @@ console.log(test('GRAPHQL'));
               console.error('[X0001]', ex);
             }
           }
-          console.log('GETTING CONTEXT', user, token);
           return {
             user,
             dataSources: graphQlServer.datasources,

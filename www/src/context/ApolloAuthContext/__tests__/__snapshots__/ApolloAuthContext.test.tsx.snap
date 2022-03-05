@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`the auth provider exists 1`] = `
-<DocumentFragment>
-  test
-</DocumentFragment>
-`;

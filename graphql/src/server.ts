@@ -6,7 +6,7 @@ import { IMocks } from '@graphql-tools/mock';
 import { IPubSub } from './lib/types';
 import { PrismaClient } from '@prisma/client';
 import { AuthContext } from '@lib/auth/AuthContext';
-import { GraphQLSchema } from 'graphql';
+import { GraphQLSchema } from 'graphql/type/schema';
 
 export const rootTypeDefs = gql`
   type Query {

@@ -12,17 +12,4 @@ describe('the app component', () => {
     const { asFragment } = render(<App />);
     expect(asFragment()).toMatchSnapshot();
   });
-
-  it('opens the app bar on click', async () => {
-    const { findByLabelText } = render(<App />);
-    const menuButton = await findByLabelText('open drawer');
-    expect(menuButton).toBeDefined();
-    act(() => {
-      fireEvent.click(menuButton);
-    });
-    const closeButton = await findByLabelText('menu close');
-    act(() => {
-      fireEvent.click(closeButton);
-    });
-  });
 });

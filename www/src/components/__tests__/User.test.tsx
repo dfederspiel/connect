@@ -28,12 +28,6 @@ describe('the user component', () => {
     const wrapper = ({ children }: any) => (
       <MockAuthProvider>{children}</MockAuthProvider>
     );
-    it('renders correctly without user context', () => {
-      const { asFragment, getByRole } = render(<User />, { wrapper });
-      expect(getByRole('button').textContent).toEqual('Login');
-
-      expect(asFragment()).toMatchSnapshot();
-    });
 
     describe('and when the user clicks the login button', () => {
       it('call the signin function', () => {
