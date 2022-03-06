@@ -23,7 +23,8 @@ export const rootTypeDefs = gql`
   }
 `;
 interface IDataSources {
-  userApi: UserDataSource;
+  users: UserDataSource;
+  articles: ArticlesDataSource;
 }
 export default class GraphQLServer {
   schema: GraphQLSchema;
@@ -45,7 +46,7 @@ export default class GraphQLServer {
     this.dataContext = new UserDataContext(this.client);
     this.authContext = new AuthContext(this.dataContext);
     this.datasources = {
-      userApi: new UserDataSource(new UserDataContext(this.client)),
+      users: new UserDataSource(new UserDataContext(this.client)),
       articles: new ArticlesDataSource(this.client),
     };
     this.mocks = mocks;

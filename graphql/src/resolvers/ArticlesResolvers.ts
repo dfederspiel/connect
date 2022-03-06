@@ -2,6 +2,8 @@ import { IResolvers } from '@graphql-tools/utils';
 import { Article, User } from '@prisma/client';
 import { gql } from 'apollo-server-express';
 import ArticlesDataSource from '../datasources/ArticlesDataSource';
+import UserDataSource from '../datasources/UsersDataSource';
+import { ArticleInputArgs } from '../generated/graphql';
 
 export const ArticlesTypeDefs = gql`
   input ArticleInputArgs {
@@ -29,7 +31,7 @@ export const ArticlesTypeDefs = gql`
 
 interface ArticlesContext {
   user: User;
-  dataSources: { articles: ArticlesDataSource };
+  dataSources: { articles: ArticlesDataSource; users: UserDataSource };
 }
 
 interface IArticlesResolversQuery {
@@ -44,14 +46,19 @@ interface IArticlesResolversQuery {
 interface IArticlesResolversMutation {
   article(
     parent: void,
-    args: { article: { title: string; body: string; userId: number } },
+    args: { article: ArticleInputArgs },
     context: ArticlesContext,
-  );
+  ): Promise<Article>;
+}
+
+interface IArticlesEntityResolvers {
+  user(parent: Article, args: void, context: ArticlesContext): Promise<User | null>;
 }
 
 interface IArticlesResolvers extends IResolvers {
   Query: IArticlesResolversQuery;
   Mutation: IArticlesResolversMutation;
+  Article: IArticlesEntityResolvers;
 }
 
 export default class ArticlesResolvers {
@@ -75,6 +82,11 @@ export default class ArticlesResolvers {
       Mutation: {
         article: (_, args, context) => {
           return context.dataSources.articles.post(args.article);
+        },
+      },
+      Article: {
+        user: async (parent, _, context) => {
+          return parent.userId ? context.dataSources.users.getById(parent.userId) : null;
         },
       },
     };

@@ -37,18 +37,14 @@ export default class UsersResolvers {
         user: (
           _parent,
           args: {
-            id: string;
+            id: number;
           },
-          context: { dataSources: { userApi: UserDataSource } },
+          context: { dataSources: { users: UserDataSource } },
         ) => {
-          return context.dataSources.userApi.getById(args.id);
+          return context.dataSources.users.getById(args.id);
         },
-        users: (
-          _parent,
-          _args,
-          context: { dataSources: { userApi: UserDataSource } },
-        ) => {
-          return context.dataSources.userApi.getAll();
+        users: (_parent, _args, context: { dataSources: { users: UserDataSource } }) => {
+          return context.dataSources.users.getAll();
         },
       } as IUserResolversQuery,
     };

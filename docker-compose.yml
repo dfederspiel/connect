@@ -18,6 +18,7 @@ services:
     links: 
       - postgres
     volumes:
+      - ./lib:/usr/src/app/lib
       - ./prisma:/usr/src/app/prisma
       - ./graphql/src:/usr/src/app/graphql/src
       - ./graphql/index.ts:/usr/src/app/graphql/index.ts

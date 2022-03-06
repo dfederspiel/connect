@@ -10,12 +10,10 @@ export default class UserDataSource extends DataSource {
   }
 
   getAll = async (): Promise<User[]> => {
-    const users = await this.context.getAll();
-    console.log('[USERS]', users);
-    return users;
+    return this.context.getAll();
   };
 
-  getById = async (id: string): Promise<User | null> => {
-    return await this.context.get(id);
+  getById = async (id?: number): Promise<User | null> => {
+    return id ? this.context.getById(id) : null;
   };
 }

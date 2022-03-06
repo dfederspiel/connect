@@ -33,10 +33,10 @@ export default class UserDataContext implements IUserDataContext {
     return await this.client.user.findMany();
   }
 
-  async get(id: string): Promise<User | null> {
+  async getById(id: number): Promise<User | null> {
     return await this.client.user.findUnique({
       where: {
-        id: Number(id),
+        id,
       },
     });
   }

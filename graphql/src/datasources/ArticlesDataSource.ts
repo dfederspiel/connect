@@ -1,5 +1,6 @@
 import { Article, PrismaClient } from '@prisma/client';
 import { DataSource } from 'apollo-datasource';
+import { ArticleInputArgs } from '../generated/graphql';
 
 export default class ArticlesDataSource extends DataSource {
   client: PrismaClient;
@@ -20,7 +21,7 @@ export default class ArticlesDataSource extends DataSource {
     });
   }
 
-  post(article: { title: string; body: string; userId: number }): Promise<Article> {
+  post(article: ArticleInputArgs): Promise<Article> {
     return this.client.article.create({
       data: {
         title: article.title,

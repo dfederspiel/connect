@@ -10,7 +10,7 @@ const user = {
 
 const context = {
   dataSources: {
-    userApi: {
+    users: {
       getById: async (): Promise<User | null> => user,
       getAll: async (): Promise<User[]> => [user, user],
       context: MockUserDataContext,
