@@ -7,6 +7,7 @@ import { IPubSub } from './lib/types';
 import { PrismaClient, User } from '@prisma/client';
 import { AuthContext } from '@lib/auth/AuthContext';
 import { GraphQLSchema } from 'graphql/type/schema';
+import ArticlesDataSource from './datasources/ArticlesDataSource';
 
 export const rootTypeDefs = gql`
   type Query {
@@ -45,6 +46,7 @@ export default class GraphQLServer {
     this.authContext = new AuthContext(this.dataContext);
     this.datasources = {
       userApi: new UserDataSource(new UserDataContext(this.client)),
+      articles: new ArticlesDataSource(this.client),
     };
     this.mocks = mocks;
     // this.typeDefs = [AffirmationsTypeDefs, UsersTypeDefs];
@@ -61,7 +63,11 @@ export default class GraphQLServer {
       dataSources: () => this.datasources,
       introspection: true,
       mocks: this.mocks,
-      context: async ({ req }) => {
+      context: async ({
+        req,
+      }): Promise<{
+        user: User;
+      }> => {
         // get the user token from the headers
         console.log('ADDING CONTEXT FOR POST');
         const token = req?.headers?.authorization?.split(' ')[1];

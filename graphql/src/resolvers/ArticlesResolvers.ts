@@ -1,26 +1,57 @@
 import { IResolvers } from '@graphql-tools/utils';
-import { Article } from '@prisma/client';
+import { Article, User } from '@prisma/client';
 import { gql } from 'apollo-server-express';
+import ArticlesDataSource from '../datasources/ArticlesDataSource';
 
 export const ArticlesTypeDefs = gql`
+  input ArticleInputArgs {
+    title: String!
+    body: String!
+    userId: Int!
+  }
+
   type Article {
-    id: ID!
+    id: ID
+    body: String
     title: String
     user: User
   }
 
   extend type Query {
-    article(id: Int): Article
+    article(id: [Int]): [Article]
     articles: [Article]
+  }
+
+  extend type Mutation {
+    article(article: ArticleInputArgs!): Article
   }
 `;
 
-interface IArticlesResolversQuery {
-  article(parent: any, args: any, context: any, other: any): Promise<Article | null>;
-  articles(parent: any, args: any, context: any, other: any): Promise<Article[]>;
+interface ArticlesContext {
+  user: User;
+  dataSources: { articles: ArticlesDataSource };
 }
+
+interface IArticlesResolversQuery {
+  article(
+    parent: void,
+    args: { id?: number[] },
+    context: ArticlesContext,
+  ): Promise<Article[]>;
+  articles(): Promise<Article[]>;
+}
+
+interface IArticlesResolversMutation {
+  article(
+    parent: void,
+    args: { article: { title: string; body: string; userId: number } },
+    context: ArticlesContext,
+  );
+}
+
 interface IArticlesResolvers extends IResolvers {
   Query: IArticlesResolversQuery;
+  Mutation: IArticlesResolversMutation;
 }
 
 export default class ArticlesResolvers {
@@ -33,14 +64,19 @@ export default class ArticlesResolvers {
   private initializeResolvers = (): IArticlesResolvers => {
     return {
       Query: {
-        article: (_: any, args: any, context: any, __: any) => {
+        article: (_, args, context) => {
           console.log(process.env.NODE_ENV);
-          console.log(`get user by id ${args.id}`);
+          return context.dataSources.articles.get(args.id);
         },
-        articles: (_: any, _args: any, context: any, __: any) => {
+        articles: () => {
           console.log(`get all users`);
         },
       } as IArticlesResolversQuery,
+      Mutation: {
+        article: (_, args, context) => {
+          return context.dataSources.articles.post(args.article);
+        },
+      },
     };
   };
 }
