@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 import { merge } from 'webpack-merge';
-import { Configuration as WebpackConfiguration } from 'webpack';
+import { Configuration as WebpackConfiguration, WebpackPluginInstance } from 'webpack';
 import Dotenv from 'dotenv-webpack'; // https://www.npmjs.com/package/dotenv-webpack
 import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
@@ -47,7 +47,7 @@ const config: Configuration = {
     }),
     new Dotenv({
       path: 'config.development.env',
-    }),
+    }) as unknown as WebpackPluginInstance,
   ],
 };
 
