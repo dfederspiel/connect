@@ -14,6 +14,6 @@ generates:
       - "typescript-resolvers"
       - "typescript-react-apollo"
       - "fragment-matcher"
-  lib/graphql.schema.json:
+  lib/generated/graphql.schema.json:
     plugins:
       - "introspection"
