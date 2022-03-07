@@ -28,7 +28,7 @@ describe('the user data context', () => {
       domain: '',
     });
     const context = new UserDataContext(ctx.prisma);
-    const users = context.get('1');
+    const users = context.getById(1);
     await expect(users).resolves.toEqual({
       id: 1,
       email: '',

@@ -32,7 +32,7 @@ describe('the user resolvers', () => {
   describe('when the user context is set', () => {
     it('can get the current user', async () => {
       const resolver = new UsersResolvers();
-      const user = await resolver.resolvers.Query.user(null, null, context, null);
+      const user = await resolver.resolvers.Query.user(null, { id: 1 }, context, null);
       expect(user).toMatchSnapshot();
     });
 

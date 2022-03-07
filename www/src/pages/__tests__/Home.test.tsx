@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import Home from '../Home';
 
-const mockQueryResult = { loading: false, data: { users: [] }, error: null };
+const mockQueryResult = { loading: false, data: { users: [], article: [] }, error: null };
 const mockMutationResult = [jest.fn(), { loading: false, data: [], error: null }];
 jest.mock('@apollo/client', () => ({
   ...jest.requireActual('@apollo/client'),
