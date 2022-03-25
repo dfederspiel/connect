@@ -9,7 +9,7 @@ const user = {
 
 export const MockUserDataContext = {
   createUser: async () => user,
-  get: async () => user,
+  getById: async () => user,
   getAll: async () => [user],
   getByEmail: async () => user,
   post: async (user: User) => user,

@@ -69,7 +69,7 @@ export default class AffirmationsResolvers {
       Subscription: {
         affirmationGiven: {
           subscribe: withFilter(
-            () => this.pubsub.asyncIterator('AFFIRMATION_GIVEN'),
+            () => this.pubsub.asyncIterator(AFFIRMATION_GIVEN),
             (payload, _args, context) => {
               console.log('WEBSOCKET SUBSCRIBE', payload, _args, context);
               return parseInt(payload.to) === context.user.id;

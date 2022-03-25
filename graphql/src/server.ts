@@ -4,9 +4,10 @@ import UserDataContext from './data/UserDataContext';
 import UserDataSource from './datasources/UsersDataSource';
 import { IMocks } from '@graphql-tools/mock';
 import { IPubSub } from './lib/types';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, User } from '@prisma/client';
 import { AuthContext } from '@lib/auth/AuthContext';
 import { GraphQLSchema } from 'graphql/type/schema';
+import ArticlesDataSource from './datasources/ArticlesDataSource';
 
 export const rootTypeDefs = gql`
   type Query {
@@ -22,7 +23,8 @@ export const rootTypeDefs = gql`
   }
 `;
 interface IDataSources {
-  userApi: UserDataSource;
+  users: UserDataSource;
+  articles: ArticlesDataSource;
 }
 export default class GraphQLServer {
   schema: GraphQLSchema;
@@ -44,7 +46,8 @@ export default class GraphQLServer {
     this.dataContext = new UserDataContext(this.client);
     this.authContext = new AuthContext(this.dataContext);
     this.datasources = {
-      userApi: new UserDataSource(new UserDataContext(this.client)),
+      users: new UserDataSource(new UserDataContext(this.client)),
+      articles: new ArticlesDataSource(this.client),
     };
     this.mocks = mocks;
     // this.typeDefs = [AffirmationsTypeDefs, UsersTypeDefs];
@@ -61,7 +64,11 @@ export default class GraphQLServer {
       dataSources: () => this.datasources,
       introspection: true,
       mocks: this.mocks,
-      context: async ({ req }) => {
+      context: async ({
+        req,
+      }): Promise<{
+        user: User;
+      }> => {
         // get the user token from the headers
         console.log('ADDING CONTEXT FOR POST');
         const token = req?.headers?.authorization?.split(' ')[1];
@@ -79,6 +86,14 @@ export default class GraphQLServer {
         // we could also check user roles/permissions here
         if (process.env.NODE_ENV === 'production')
           if (!user) throw new AuthenticationError('you must be logged in');
+
+        if (!token && process.env.NODE_ENV === 'development') {
+          user = {
+            id: 1,
+            domain: 'federnet.com',
+            email: 'david@federnet.com',
+          } as User;
+        }
 
         console.log('USER CONTEXT', user);
         // add the user to the context

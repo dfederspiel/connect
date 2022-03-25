@@ -9,6 +9,7 @@ import { rootTypeDefs } from '../typedefs';
 import { AffirmationsTypeDefs } from '../resolvers/AffirmationsResolvers';
 import { UsersTypeDefs } from '../resolvers/UsersResolvers';
 import resolvers from '../resolvers';
+import { ArticlesTypeDefs } from '../resolvers/ArticlesResolvers';
 
 jest.spyOn(AuthContext.prototype, 'decode').mockReturnValue(Promise.resolve({}));
 
@@ -17,7 +18,7 @@ let mockCtx: MockContext;
 let ctx: Context;
 
 const schema = makeExecutableSchema({
-  typeDefs: [rootTypeDefs, AffirmationsTypeDefs, UsersTypeDefs],
+  typeDefs: [rootTypeDefs, AffirmationsTypeDefs, ArticlesTypeDefs, UsersTypeDefs],
   resolvers: resolvers(pubsub),
 });
 

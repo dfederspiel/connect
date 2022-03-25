@@ -35,24 +35,16 @@ export default class UsersResolvers {
     return {
       Query: {
         user: (
-          _: any,
-          _args: any,
-          context: { user: User; dataSources: { userApi: UserDataSource } },
-          __: any,
+          _parent,
+          args: {
+            id: number;
+          },
+          context: { dataSources: { users: UserDataSource } },
         ) => {
-          return context.dataSources.userApi.getById(context.user.id.toString());
+          return context.dataSources.users.getById(args.id);
         },
-        users: (
-          _: any,
-          _args: any,
-          context: { user: User; dataSources: { userApi: UserDataSource } },
-          __: any,
-        ) => {
-          // if (!context.user)
-          //   return {
-          //     error: 'There is no user context, did you forget to pass a bearer token?',
-          //   };
-          return context.dataSources.userApi.getAll();
+        users: (_parent, _args, context: { dataSources: { users: UserDataSource } }) => {
+          return context.dataSources.users.getAll();
         },
       } as IUserResolversQuery,
     };

@@ -1,6 +1,6 @@
 generator client {
-  provider        = "prisma-client-js"
-  binaryTargets   = ["native", "linux-musl"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl"]
 }
 
 datasource db {
@@ -9,10 +9,11 @@ datasource db {
 }
 
 model User {
-  id        Int        @id @default(autoincrement())
-  email     String     @unique
-  domain    String?
-  Profile   Profile?
+  id      Int       @id @default(autoincrement())
+  email   String    @unique
+  domain  String?
+  Profile Profile?
+  Article Article[]
 }
 
 model Profile {
@@ -23,4 +24,12 @@ model Profile {
   picture    String?
   userId     Int?    @unique
   User       User?   @relation(fields: [userId], references: [id])
+}
+
+model Article {
+  id     Int     @id @default(autoincrement())
+  title  String?
+  body   String?
+  userId Int?
+  author User?   @relation(fields: [userId], references: [id])
 }

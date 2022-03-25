@@ -5,6 +5,7 @@ services:
   graphql:
     image: codefly.azurecr.io/graphql:latest
     environment:
+      NODE_ENV: development
       DATABASE_URL: postgres://user:postgres@postgres:5432/db
       B2C_AUTHORITY: https://codeflyb2c.b2clogin.com/codeflyb2c.onmicrosoft.com
       B2C_LOGIN_POLICY: B2C_1_CASpR
@@ -17,6 +18,7 @@ services:
     links: 
       - postgres
     volumes:
+      - ./lib:/usr/src/app/lib
       - ./prisma:/usr/src/app/prisma
       - ./graphql/src:/usr/src/app/graphql/src
       - ./graphql/index.ts:/usr/src/app/graphql/index.ts
@@ -40,7 +42,7 @@ services:
       - ./prisma:/usr/src/app/prisma
       - ./api/src:/usr/src/app/api/src
     ports:
-      - 8081:3000
+      - 8082:3000
     command: [bash, -c, "prisma migrate deploy --preview-feature && cd api && npm start"]
   www:
     image: codefly.azurecr.io/www:latest
@@ -56,6 +58,14 @@ services:
     depends_on:
       - graphql
     command: [bash, -c, "cd www && npm start -- --port=80"]
+  cosmos:
+    image: mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator
+    ports:
+      - 8081:8081
+    environment:
+       AZURE_COSMOS_EMULATOR_PARTITION_COUNT: 10
+       AZURE_COSMOS_EMULATOR_ENABLE_DATA_PERSISTENCE: false
+       NODE_TLS_REJECT_UNAUTHORIZED: 0
   postgres:
     image: codefly.azurecr.io/postgres:latest
     environment:

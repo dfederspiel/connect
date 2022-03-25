@@ -15,7 +15,7 @@ describe('the users datasource', () => {
 
   it('can get a user by id', async () => {
     const datasource = new UserDataSource(MockUserDataContext);
-    const user = await datasource.getById('1');
+    const user = await datasource.getById(1);
     expect(user).toBeDefined();
     expect(user).toMatchSnapshot();
   });

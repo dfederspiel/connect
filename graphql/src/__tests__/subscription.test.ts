@@ -13,12 +13,13 @@ import { AffirmationsTypeDefs } from '../resolvers/AffirmationsResolvers';
 import { UsersTypeDefs } from '../resolvers/UsersResolvers';
 import resolvers from '../resolvers';
 import { PubSub } from 'graphql-subscriptions';
+import { ArticlesTypeDefs } from '../resolvers/ArticlesResolvers';
 
 const pubsub = new PubSub();
 const PORT = 9000;
 
 const schema = makeExecutableSchema({
-  typeDefs: [rootTypeDefs, AffirmationsTypeDefs, UsersTypeDefs],
+  typeDefs: [rootTypeDefs, AffirmationsTypeDefs, ArticlesTypeDefs, UsersTypeDefs],
   resolvers: resolvers(pubsub),
 });
 
