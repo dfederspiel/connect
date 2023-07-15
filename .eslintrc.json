@@ -27,5 +27,15 @@
     "rules": {
         "react/react-in-jsx-scope": "off",
         "react/prop-types": "off"
-    }
+    },
+    "overrides": [
+        {
+          "files": ["*.graphql"],
+          "parser": "@graphql-eslint/eslint-plugin",
+          "plugins": ["@graphql-eslint"],
+          "rules": {
+            "@graphql-eslint/known-type-names": "error"
+          }
+        }
+      ]
 }

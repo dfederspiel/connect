@@ -13,7 +13,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "subscription affirmationGivenSubcription {\n  affirmationGiven {\n    from\n    to\n  }\n}": types.AffirmationGivenSubcriptionDocument,
+    "subscription affirmationGivenSubscription {\n  affirmationGiven {\n    from\n    to\n  }\n}": types.AffirmationGivenSubscriptionDocument,
     "query GetUsers {\n  users {\n    id\n    email\n  }\n}": types.GetUsersDocument,
     "mutation sendAffirmation($userId: ID!) {\n  sendAffirmation(userId: $userId) {\n    from\n    to\n  }\n}": types.SendAffirmationDocument,
 };
@@ -35,7 +35,7 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "subscription affirmationGivenSubcription {\n  affirmationGiven {\n    from\n    to\n  }\n}"): (typeof documents)["subscription affirmationGivenSubcription {\n  affirmationGiven {\n    from\n    to\n  }\n}"];
+export function graphql(source: "subscription affirmationGivenSubscription {\n  affirmationGiven {\n    from\n    to\n  }\n}"): (typeof documents)["subscription affirmationGivenSubscription {\n  affirmationGiven {\n    from\n    to\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

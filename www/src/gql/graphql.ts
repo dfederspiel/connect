@@ -50,10 +50,10 @@ export type User = {
   id: Scalars['ID']['output'];
 };
 
-export type AffirmationGivenSubcriptionSubscriptionVariables = Exact<{ [key: string]: never; }>;
+export type AffirmationGivenSubscriptionSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AffirmationGivenSubcriptionSubscription = { __typename?: 'Subscription', affirmationGiven?: { __typename?: 'Affirmation', from: string, to: string } | null };
+export type AffirmationGivenSubscriptionSubscription = { __typename?: 'Subscription', affirmationGiven?: { __typename?: 'Affirmation', from: string, to: string } | null };
 
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -68,6 +68,6 @@ export type SendAffirmationMutationVariables = Exact<{
 export type SendAffirmationMutation = { __typename?: 'Mutation', sendAffirmation?: { __typename?: 'Affirmation', from: string, to: string } | null };
 
 
-export const AffirmationGivenSubcriptionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"affirmationGivenSubcription"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"affirmationGiven"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"from"}},{"kind":"Field","name":{"kind":"Name","value":"to"}}]}}]}}]} as unknown as DocumentNode<AffirmationGivenSubcriptionSubscription, AffirmationGivenSubcriptionSubscriptionVariables>;
+export const AffirmationGivenSubscriptionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"affirmationGivenSubscription"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"affirmationGiven"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"from"}},{"kind":"Field","name":{"kind":"Name","value":"to"}}]}}]}}]} as unknown as DocumentNode<AffirmationGivenSubscriptionSubscription, AffirmationGivenSubscriptionSubscriptionVariables>;
 export const GetUsersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUsers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]} as unknown as DocumentNode<GetUsersQuery, GetUsersQueryVariables>;
 export const SendAffirmationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"sendAffirmation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sendAffirmation"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"from"}},{"kind":"Field","name":{"kind":"Name","value":"to"}}]}}]}}]} as unknown as DocumentNode<SendAffirmationMutation, SendAffirmationMutationVariables>;

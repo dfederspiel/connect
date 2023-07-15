@@ -1,4 +1,4 @@
-subscription affirmationGivenSubcription {
+subscription affirmationGivenSubscription {
     affirmationGiven {
       from
       to
