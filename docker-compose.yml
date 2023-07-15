@@ -23,25 +23,6 @@ services:
     ports:
       - 8080:4000
     command: [bash, -c, "cd graphql && npm start"]
-  api:
-    image: codefly.azurecr.io/api:latest
-    environment:
-      DATABASE_URL: postgres://user:postgres@postgres:5432/connect
-      B2C_APPLICATION_ID: 2b08acb3-4c70-4b1f-8925-b00158883f1a
-      B2C_KNOWN_AUTHORITIES: codeflyb2c.b2clogin.com
-    build:
-      context: .
-      dockerfile: docker/api/Dockerfile
-    depends_on:
-      - postgres
-    links: 
-      - postgres
-    volumes:
-      - ./prisma:/usr/src/app/prisma
-      - ./api/src:/usr/src/app/api/src
-    ports:
-      - 8081:3000
-    command: [bash, -c, "prisma migrate deploy --preview-feature && cd api && npm start"]
   www:
     image: codefly.azurecr.io/www:latest
     build:

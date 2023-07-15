@@ -21,8 +21,8 @@
         }
     },
     "ignorePatterns": [
-        "./www/src/gql/**/*.ts",
-        "./graphql/src/schema/**/*.generated.ts"
+        "www/src/gql/**/*.ts",
+        "graphql/src/schema/**/*.generated.ts"
     ],
     "rules": {
         "react/react-in-jsx-scope": "off",

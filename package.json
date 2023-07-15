@@ -53,7 +53,6 @@
     "setup": "npm-run-all setup:*",
     "setup:www": "cd www && npm install",
     "setup:graphql": "cd graphql && npm install",
-    "setup:api": "cd api && npm install",
     "setup:generate": "prisma generate",
     "lint": "eslint .",
     "generate": "prisma generate",

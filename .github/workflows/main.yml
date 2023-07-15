@@ -23,23 +23,17 @@ jobs:
       - run: npm run setup
       - run: npm run lint
       - run: npm run test:ci
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./coverage/
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v2
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     directory: ./coverage/
   
   build-www:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@main
       - run: docker build . -t codefly.azurecr.io/www:latest --file ./docker/www/Dockerfile
-
-  build-api:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@main
-      - run: docker build . -t codefly.azurecr.io/www:latest --file ./docker/api/Dockerfile
 
   build-graphql:
     runs-on: ubuntu-latest
