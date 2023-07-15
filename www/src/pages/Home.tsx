@@ -5,7 +5,9 @@ const HomePage = () => {
   return (
     <>
       <Typography variant={'h2'}>Home</Typography>
-      <Affirmations />
+      <>
+        <Affirmations />
+      </>
     </>
   );
 };

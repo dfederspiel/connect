@@ -1,0 +1,6 @@
+subscription affirmationGivenSubcription {
+    affirmationGiven {
+      from
+      to
+    }
+  }

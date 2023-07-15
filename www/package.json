@@ -10,7 +10,8 @@
     "test": "jest --maxWorkers=50% --detectOpenHandles",
     "test:coverage": "jest --coverage --runInBand",
     "lint": "eslint ./src --ext .ts --ext .tsx",
-    "lint:fix": "npm run lint -- --fix"
+    "lint:fix": "npm run lint -- --fix",
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "browserslist": {
     "production": [
@@ -50,6 +51,9 @@
     "@babel/preset-react": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",
     "@babel/runtime": "^7.17.2",
+    "@graphql-codegen/cli": "^4.0.1",
+    "@graphql-codegen/client-preset": "^4.0.1",
+    "@graphql-codegen/introspection": "^4.0.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.4",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.3",

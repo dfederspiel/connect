@@ -20,6 +20,10 @@
             "jsx": true
         }
     },
+    "ignorePatterns": [
+        "./www/src/gql/**/*.ts",
+        "./graphql/src/schema/**/*.generated.ts"
+    ],
     "rules": {
         "react/react-in-jsx-scope": "off",
         "react/prop-types": "off"

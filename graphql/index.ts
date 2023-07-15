@@ -51,6 +51,15 @@ export interface ApolloContext {
   // const graphQlServer = new GraphQLServer(schema, pubsub, false);
   const graphQlServer = new ApolloServer<ApolloContext>({
     schema: makeExecutableSchema({ typeDefs, resolvers }),
+    introspection: true,
+  });
+  await graphQlServer.start();
+  graphQlServer.applyMiddleware({
+    app,
+    cors: {
+      credentials: true,
+      origin: '*',
+    },
   });
   // const apollo = graphQlServer.server();
   // await apollo.start();

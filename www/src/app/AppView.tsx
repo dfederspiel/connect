@@ -19,7 +19,7 @@ import { Link, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import HomePage from '../pages/Home';
 import User from '../components/User';
 import { useSnacks } from '../context/AlertContext/SnackBarProvider';
-import { AFFIRMATION_GIVEN_SUBSCRIPTION } from '../graphql/subscriptions';
+import { AffirmationGivenSubcriptionDocument } from '../gql/graphql';
 
 const AppView = (): JSX.Element => {
   const [open, setOpen] = useState(false);
@@ -34,7 +34,7 @@ const AppView = (): JSX.Element => {
 
   const snacks = useSnacks();
 
-  useSubscription(AFFIRMATION_GIVEN_SUBSCRIPTION, {
+  useSubscription(AffirmationGivenSubcriptionDocument, {
     onSubscriptionData: ({ subscriptionData }) => {
       console.log(subscriptionData);
       snacks.updateMessage('Affirmation Given!!');
