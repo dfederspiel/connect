@@ -2,6 +2,7 @@
   "name": "graphql",
   "version": "1.0.0",
   "scripts": {
+    "codegen": "npx graphql-codegen",
     "start": "nodemon -r tsconfig-paths/register ./index.ts",
     "start:production": "ts-node -r tsconfig-paths/register ./index.ts",
     "start:production:test": "nodemon -r tsconfig-paths/register ./test.index.ts",
@@ -11,6 +12,8 @@
   "license": "MIT",
   "dependencies": {
     "@faker-js/faker": "^6.0.0-alpha.7",
+    "@graphql-tools/graphql-file-loader": "^8.0.0",
+    "@graphql-tools/load": "^8.0.0",
     "@graphql-tools/schema": "^10.0.0",
     "@graphql-tools/utils": "^8.6.1",
     "@types/faker": "^6.6.8",
@@ -23,6 +26,9 @@
     "ws": "^8.13.0"
   },
   "devDependencies": {
+    "@eddeee888/gcg-typescript-resolver-files": "^0.5.0",
+    "@graphql-codegen/cli": "^4.0.1",
+    "@graphql-eslint/eslint-plugin": "^3.20.1",
     "nodemon": "^2.0.15",
     "ts-node": "^10.5.0"
   }

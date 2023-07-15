@@ -14,6 +14,7 @@ export default class UserDataContext implements IUserDataContext {
   }
 
   async createUser(email: string): Promise<User> {
+    console.log('EMAIL', email);
     return await this.client.user.create({
       data: {
         email: email,
@@ -24,7 +25,7 @@ export default class UserDataContext implements IUserDataContext {
   async getByEmail(email: string): Promise<User | null> {
     return await this.client.user.findUnique({
       where: {
-        email: email,
+        email,
       },
     });
   }
@@ -32,10 +33,11 @@ export default class UserDataContext implements IUserDataContext {
   async getAll(): Promise<User[]> {
     return await this.client.user.findMany();
   }
+
   async get(id: string): Promise<User | null> {
     return await this.client.user.findUnique({
       where: {
-        id: parseInt(id),
+        id: String(id),
       },
     });
   }

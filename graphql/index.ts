@@ -1,17 +1,30 @@
 import { createServer } from 'http';
-
 import express from 'express';
 import cors from 'cors';
-import GraphQLServer from './src/server';
+// import GraphQLServer, { IDataSources } from './src/server';
 import { useServer } from 'graphql-ws/lib/use/ws';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { WebSocketServer } from 'ws';
 
-import { rootTypeDefs } from './src/server';
-import { AffirmationsTypeDefs } from './src/resolvers/AffirmationsResolvers';
-import { UsersTypeDefs } from './src/resolvers/UsersResolvers';
-import resolvers from './src/resolvers';
+import { PrismaClient, User } from '@prisma/client';
+
+import { typeDefs } from './src/schema/typeDefs.generated';
+import { resolvers } from './src/schema/resolvers.generated';
+import { ApolloServer } from 'apollo-server-express';
+import UserDataContext from '@lib/auth/UserDataContext';
+import { AuthContext } from '@lib/auth/AuthContext';
+import UserDataSource from 'src/datasources/UsersDataSource';
+
+export interface IDataSources {
+  userApi: UserDataSource;
+}
+
+export interface ApolloContext {
+  pubsub: RedisPubSub;
+  user: User;
+  dataSources: IDataSources;
+}
 
 (async () => {
   const port = process.env.PORT || 4000;
@@ -20,36 +33,51 @@ import resolvers from './src/resolvers';
   app.use(cors());
 
   const httpServer = createServer(app);
+
   const pubsub = new RedisPubSub({
     connection: {
       host: process.env.REDIS_HOST || 'redis',
       port: 6379,
-      retry_strategy: (options: { attempt: number }) => {
-        return Math.max(options.attempt * 100, 3000);
+      retryStrategy: (attempt) => {
+        return Math.max(attempt * 100, 3000);
       },
     },
   });
 
   const schema = makeExecutableSchema({
-    typeDefs: [rootTypeDefs, AffirmationsTypeDefs, UsersTypeDefs],
-    resolvers: resolvers(pubsub),
+    typeDefs,
+    resolvers,
   });
-  const graphQlServer = new GraphQLServer(schema, pubsub, false);
-  const apollo = graphQlServer.server();
-  await apollo.start();
+  // const graphQlServer = new GraphQLServer(schema, pubsub, false);
+  const graphQlServer = new ApolloServer<ApolloContext>({
+    schema: makeExecutableSchema({ typeDefs, resolvers }),
+  });
+  // const apollo = graphQlServer.server();
+  // await apollo.start();
 
-  apollo.applyMiddleware({
-    app,
-    cors: {
-      credentials: true,
-      origin: '*',
-    },
-  });
+  // apollo.applyMiddleware({
+  //   app,
+  //   cors: {
+  //     credentials: true,
+  //     origin: '*',
+  //   },
+  // });
+  const client = new PrismaClient();
+  const dataContext = new UserDataContext(client);
+  const authContext = new AuthContext(dataContext);
+
+  const dataSources = {
+    userApi: new UserDataSource(new UserDataContext(client)),
+  };
 
   httpServer.listen(port, () => {
     const wsServer = new WebSocketServer({
       server: httpServer,
       path: '/graphql',
+    });
+
+    wsServer.on('close', () => {
+      console.log('CONNECTION CLOSED');
     });
 
     useServer(
@@ -60,22 +88,23 @@ import resolvers from './src/resolvers';
           let user;
           if (token) {
             try {
-              const decoded = await graphQlServer.authContext.decode(token);
-              user = await graphQlServer.authContext.getUser(decoded);
+              const decoded = await authContext.decode(token);
+              user = await authContext.getUser(decoded);
             } catch (ex) {
               console.error('[X0001]', ex);
             }
           }
           return {
+            pubsub,
             user,
-            dataSources: graphQlServer.datasources,
+            dataSources,
           };
         },
       },
       wsServer,
     );
     console.log(
-      `GraphQL Playground ready at http://localhost:${port}${apollo.graphqlPath}`,
+      `GraphQL Playground ready at http://localhost:${port}${graphQlServer.graphqlPath}`,
     );
   });
 })();

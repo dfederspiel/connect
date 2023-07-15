@@ -42,7 +42,19 @@ const Affirmations = () => {
             >
               Send
             </button>
-            <div>{user.id}</div>
+            <button
+              type="button"
+              onClick={() => {
+                sendAffirmation({
+                  variables: {
+                    userId: '1',
+                  },
+                });
+              }}
+            >
+              Send
+            </button>
+            <span>{user.id}</span>
           </div>
         );
       }))

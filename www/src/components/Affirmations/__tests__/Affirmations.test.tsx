@@ -11,7 +11,7 @@ let defaultMock = {
     data: {
       users: [
         {
-          id: 1,
+          id: '1',
           domain: 'domain',
           email: '',
         },
@@ -24,13 +24,13 @@ const affirmationMock = {
   request: {
     query: SEND_AFFIRMATION,
     variables: {
-      userId: 1,
+      userId: '1',
     },
   },
   result: {
     data: {
-      from: 1,
-      to: 2,
+      from: '1',
+      to: '2',
     },
   },
 } as MockedResponse;
