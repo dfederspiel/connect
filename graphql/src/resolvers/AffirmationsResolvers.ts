@@ -28,7 +28,7 @@ interface IAffirmationsMutationResolvers {
     context: any,
     other: any,
   ): Promise<{
-    from: number;
+    from: string;
     to: any;
   }>;
 }
@@ -72,7 +72,7 @@ export default class AffirmationsResolvers {
             () => this.pubsub.asyncIterator('AFFIRMATION_GIVEN'),
             (payload, _args, context) => {
               console.log('WEBSOCKET SUBSCRIBE', payload, _args, context);
-              return parseInt(payload.to) === context.user.id;
+              return payload.to === context.user.id;
             },
           ),
         },

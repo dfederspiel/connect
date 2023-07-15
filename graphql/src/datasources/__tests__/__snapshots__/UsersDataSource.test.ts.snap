@@ -1,9 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`the users datasource can get a user by id 1`] = `
-Object {
-  "domain": "codefly.ninja",
-  "email": "david@codefly.ninja",
-  "id": 1,
-}
-`;

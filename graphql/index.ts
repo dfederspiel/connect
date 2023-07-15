@@ -5,46 +5,14 @@ import cors from 'cors';
 import GraphQLServer from './src/server';
 import { useServer } from 'graphql-ws/lib/use/ws';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
-import { DataMocks } from './__mocks__/mocks';
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { test } from '@lib/tools';
 import { WebSocketServer } from 'ws';
-import { IMocks } from '@graphql-tools/mock';
 
 import { rootTypeDefs } from './src/server';
 import { AffirmationsTypeDefs } from './src/resolvers/AffirmationsResolvers';
 import { UsersTypeDefs } from './src/resolvers/UsersResolvers';
 import resolvers from './src/resolvers';
-import { ApolloServer } from 'apollo-server-express';
 
-// import { GraphQLObjectType, GraphQLSchema, GraphQLString } from 'graphql';
-// export const schema = new GraphQLSchema({
-//   query: new GraphQLObjectType({
-//     name: 'Query',
-//     fields: {
-//       hello: {
-//         type: GraphQLString,
-//         resolve: () => 'world',
-//       },
-//     },
-//   }),
-//   subscription: new GraphQLObjectType({
-//     name: 'Subscription',
-//     fields: {
-//       greetings: {
-//         type: GraphQLString,
-//         subscribe: async function* (a, b, c) {
-//           console.log('SUBSCRIPTION', a, b, c);
-//           for (const hi of ['Hi', 'Bonjour', 'Hola', 'Ciao', 'Zdravo']) {
-//             yield { greetings: hi };
-//           }
-//         },
-//       },
-//     },
-//   }),
-// });
-
-console.log(test('GRAPHQL'));
 (async () => {
   const port = process.env.PORT || 4000;
 
@@ -62,13 +30,11 @@ console.log(test('GRAPHQL'));
     },
   });
 
-  const mocks: boolean | IMocks = process.env.USE_MOCKS === 'true' ? DataMocks : false;
-
   const schema = makeExecutableSchema({
     typeDefs: [rootTypeDefs, AffirmationsTypeDefs, UsersTypeDefs],
     resolvers: resolvers(pubsub),
   });
-  const graphQlServer = new GraphQLServer(schema, pubsub, mocks);
+  const graphQlServer = new GraphQLServer(schema, pubsub, false);
   const apollo = graphQlServer.server();
   await apollo.start();
 

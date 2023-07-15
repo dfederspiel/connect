@@ -13,16 +13,16 @@ Can you use [Next.js](https://nextjs.org/) or [Create React App](https://reactjs
 
 #### Install Dependencies
 ```
-yarn install
-yarn setup
+npm install
+npm setup
 ```
 #### Build the dev environment
 ```
-docker-compose build
+docker compose build
 ```
 #### Start the environment
 ```
-docker-compose up
+docker compose up
 ```
 
 ---

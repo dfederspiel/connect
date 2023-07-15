@@ -16,7 +16,7 @@ export default class UserController {
   private getAllUsers = async (req: any, res: any) => {
     res.json([
       {
-        id: 1,
+        id: '1',
         domain: '',
         email: '',
       },

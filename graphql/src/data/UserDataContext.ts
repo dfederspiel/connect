@@ -32,10 +32,11 @@ export default class UserDataContext implements IUserDataContext {
   async getAll(): Promise<User[]> {
     return await this.client.user.findMany();
   }
+
   async get(id: string): Promise<User | null> {
     return await this.client.user.findUnique({
       where: {
-        id: parseInt(id),
+        id,
       },
     });
   }
