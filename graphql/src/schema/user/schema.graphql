@@ -1,10 +1,10 @@
-  type User {
-    id: ID!
-    email: String
-    domain: String
-  }
+type User {
+  id: ID!
+  email: String
+  domain: String
+}
 
-  extend type Query {
-    user: User
-    users: [User]
-  }
+extend type Query {
+  user: User
+  users: [User]
+}

@@ -1,16 +1,8 @@
-import {
-  ApolloClient,
-  ApolloLink,
-  FetchResult,
-  InMemoryCache,
-  Operation,
-} from '@apollo/client';
-import { Observable } from '@apollo/client/utilities';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { useAuth } from '../AuthenticationContext';
 import { ApolloAuthContext } from './types';
-import { createClient, ClientOptions, Client } from 'graphql-ws';
+import { createClient } from 'graphql-ws';
 import { AuthStatus } from '../AuthenticationContext/useProvideAuth';
-import { print } from 'graphql/language/printer';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 
 export const useProvideApolloAuth = (): ApolloAuthContext | undefined => {
@@ -36,40 +28,6 @@ export const useProvideApolloAuth = (): ApolloAuthContext | undefined => {
       },
     }),
   );
-
-  // class WebSocketLink extends ApolloLink {
-  //   private client: Client;
-
-  //   constructor(options: ClientOptions) {
-  //     super();
-  //     this.client = createClient(options);
-  //   }
-
-  //   public request(operation: Operation): Observable<FetchResult> {
-  //     return new Observable((sink) => {
-  //       return this.client.subscribe<FetchResult>(
-  //         { ...operation, query: print(operation.query) },
-  //         {
-  //           next: sink.next.bind(sink),
-  //           complete: sink.complete.bind(sink),
-  //           error: sink.error.bind(sink),
-  //         },
-  //       );
-  //     });
-  //   }
-  // }
-  // console.log(
-  //   // eslint-disable-next-line prettier/prettier
-  //   `${protocol === 'https:' ? 'wss:' : 'ws:'}//${hostname}${portString}${process.env.APOLLO_HOST}`,
-  // );
-  // const link = new WebSocketLink({
-  //   // eslint-disable-next-line prettier/prettier
-  //   url: `${protocol === 'https:' ? 'wss:' : 'ws:'}//${hostname}${portString}${process.env.APOLLO_HOST}`,
-  //   connectionParams: async () => {
-  //     const token = await auth.token();
-  //     return { authorization: token, test: 'some_other_thing' };
-  //   },
-  // });
 
   const client = new ApolloClient({
     link,

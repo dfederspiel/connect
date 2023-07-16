@@ -1,6 +1,6 @@
 mutation sendAffirmation($userId: ID!) {
-    sendAffirmation(userId: $userId) {
-      from
-      to
-    }
+  sendAffirmation(userId: $userId) {
+    from
+    to
   }
+}

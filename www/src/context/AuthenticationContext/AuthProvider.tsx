@@ -1,4 +1,4 @@
-import React, { useContext, createContext } from 'react';
+import { useContext, createContext, ReactNode } from 'react';
 import { useProvideAuth } from './useProvideAuth';
 import { AuthContext } from './types';
 import { AuthModule, Mode } from './AuthModule';
@@ -10,7 +10,7 @@ const authContext = createContext<AuthContext>(null as unknown as AuthContext);
 const authModule = new AuthModule(Mode.Client);
 
 interface AuthProviderProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
   provider?: AuthContext;
 }
 

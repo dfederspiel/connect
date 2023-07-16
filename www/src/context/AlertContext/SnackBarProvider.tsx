@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import { useState, useEffect, createContext, useContext } from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import { SnackBarType } from './SnackBarType';
 

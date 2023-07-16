@@ -1,24 +1,5 @@
-import { gql, useMutation, useQuery } from '@apollo/client';
-import { User } from '@prisma/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { GetUsersDocument, SendAffirmationDocument } from '../../gql/graphql';
-
-// export const GET_USERS = gql`
-//   {
-//     users {
-//       id
-//       email
-//     }
-//   }
-// `;
-
-// export const SEND_AFFIRMATION = gql`
-//   mutation sendAffirmation($userId: ID!) {
-//     sendAffirmation(userId: $userId) {
-//       from
-//       to
-//     }
-//   }
-// `;
 
 const Affirmations = () => {
   const { loading, error, data } = useQuery(GetUsersDocument);

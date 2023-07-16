@@ -1,6 +1,6 @@
 query GetUsers {
-    users {
-      id
-      email
-    }
+  users {
+    id
+    email
   }
+}

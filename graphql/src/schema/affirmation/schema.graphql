@@ -1,12 +1,12 @@
-  type Affirmation {
-    from: ID!
-    to: ID!
-  }
+type Affirmation {
+  from: ID!
+  to: ID!
+}
 
-  extend type Mutation {
-    sendAffirmation(userId: ID!): Affirmation
-  }
+extend type Mutation {
+  sendAffirmation(userId: ID!): Affirmation
+}
 
-  extend type Subscription {
-    affirmationGiven: Affirmation
-  }
+extend type Subscription {
+  affirmationGiven: Affirmation
+}
