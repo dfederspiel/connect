@@ -1,5 +1,5 @@
+import { Button, Typography } from '@mui/material';
 import { useAuth } from '../context/AuthenticationContext';
-import { Typography, Button } from '@material-ui/core';
 
 const User = (): JSX.Element => {
   const auth = useAuth();

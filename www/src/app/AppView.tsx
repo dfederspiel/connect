@@ -1,25 +1,25 @@
 import { useSubscription } from '@apollo/client';
-import {
-  Container,
-  Grid,
-  Typography,
-  AppBar,
-  Toolbar,
-  IconButton,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from '@material-ui/core';
-import HomeIcon from '@material-ui/icons/Home';
-import MenuIcon from '@material-ui/icons/Menu';
+import HomeIcon from '@mui/icons-material/Home';
+import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
 import { Link, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import HomePage from '../pages/Home';
 import User from '../components/User';
 import { useSnacks } from '../context/AlertContext/SnackBarProvider';
 import { AffirmationGivenSubscriptionDocument } from '../gql/graphql';
+import {
+  AppBar,
+  Container,
+  Drawer,
+  Grid,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Toolbar,
+  Typography,
+} from '@mui/material';
 
 const AppView = (): JSX.Element => {
   const [open, setOpen] = useState(false);

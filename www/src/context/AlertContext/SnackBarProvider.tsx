@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext, useContext } from 'react';
-import Snackbar from '@material-ui/core/Snackbar';
 import { SnackBarType } from './SnackBarType';
+import { Snackbar } from '@mui/material';
 
 const snackBarContext = createContext<SnackBarType>(null as unknown as SnackBarType);
 interface SnackBarProviderProps {
