@@ -1,7 +1,6 @@
 import { createServer } from 'http';
 import express from 'express';
 import cors from 'cors';
-// import GraphQLServer, { IDataSources } from './src/server';
 import { useServer } from 'graphql-ws/lib/use/ws';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { makeExecutableSchema } from '@graphql-tools/schema';
@@ -48,11 +47,12 @@ export interface ApolloContext {
     typeDefs,
     resolvers,
   });
-  // const graphQlServer = new GraphQLServer(schema, pubsub, false);
+
   const graphQlServer = new ApolloServer<ApolloContext>({
     schema: makeExecutableSchema({ typeDefs, resolvers }),
     introspection: true,
   });
+
   await graphQlServer.start();
   graphQlServer.applyMiddleware({
     app,
@@ -61,16 +61,7 @@ export interface ApolloContext {
       origin: '*',
     },
   });
-  // const apollo = graphQlServer.server();
-  // await apollo.start();
 
-  // apollo.applyMiddleware({
-  //   app,
-  //   cors: {
-  //     credentials: true,
-  //     origin: '*',
-  //   },
-  // });
   const client = new PrismaClient();
   const dataContext = new UserDataContext(client);
   const authContext = new AuthContext(dataContext);
