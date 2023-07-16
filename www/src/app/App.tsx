@@ -1,4 +1,3 @@
-import './App.css';
 import { AuthProvider } from '../context/AuthenticationContext';
 import { ApolloAuthProvider } from '../context/ApolloAuthContext/ApolloAuthContext';
 import { SnackBarProvider } from '../context/AlertContext/SnackBarProvider';

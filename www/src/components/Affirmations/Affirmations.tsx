@@ -1,20 +1,22 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { GetUsersDocument, SendAffirmationDocument } from '../../gql/graphql';
+import { Button, Grid, Skeleton, Typography } from '@mui/material';
 
 const Affirmations = () => {
   const { loading, error, data } = useQuery(GetUsersDocument);
   const [sendAffirmation] = useMutation(SendAffirmationDocument);
 
   return (
-    (loading && <div>Loading...</div>) ||
+    (loading && <Skeleton variant="rectangular" width={210} height={118} />) ||
     (error && <div>Error! {error.message}</div>) ||
     (data?.users && (
       <div className="users-list">
         {data.users.map(
           (user) =>
             user && (
-              <div data-testid="user" key={user.id}>
-                <button
+              <Grid container data-testid="user" key={user.id}>
+                <Button
+                  variant="contained"
                   type="button"
                   onClick={() => {
                     sendAffirmation({
@@ -25,9 +27,9 @@ const Affirmations = () => {
                   }}
                 >
                   Send
-                </button>
-                <span>{user.id}</span>
-              </div>
+                </Button>
+                <Typography>{user.email}</Typography>
+              </Grid>
             ),
         )}
       </div>

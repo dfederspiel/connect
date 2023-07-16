@@ -40,6 +40,7 @@ const AppView = (): JSX.Element => {
       snacks.updateMessage('Affirmation Given!!');
     },
   });
+
   return (
     <Container>
       <AppBar position="fixed">
@@ -86,7 +87,7 @@ const AppView = (): JSX.Element => {
         </Router>
       </Grid>
       <Typography style={{ textAlign: 'center' }}>
-        Connect © 2022 created by David Federspiel
+        Connect © 2023 created by David Federspiel
       </Typography>
     </Container>
   );
