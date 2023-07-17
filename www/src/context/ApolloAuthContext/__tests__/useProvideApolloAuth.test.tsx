@@ -10,7 +10,7 @@ beforeAll(() => {
 });
 
 describe('the apollo auth context', () => {
-  const wrapper = ({ children }: any) => (
+  const wrapper = ({ children }: { children: JSX.Element }) => (
     <MockAuthProvider user="user@contoso.com">
       <MockedProvider>{children}</MockedProvider>
     </MockAuthProvider>

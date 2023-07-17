@@ -18,10 +18,10 @@ export const useProvideAuth = (auth: AuthModule): AuthContext => {
     }
   });
 
-  const signin = async (): Promise<void> => {
+  const login = async (): Promise<void> => {
     auth.login();
   };
-  const signout = (): void => {
+  const logout = (): void => {
     auth.logout();
   };
 
@@ -37,8 +37,8 @@ export const useProvideAuth = (auth: AuthModule): AuthContext => {
   return {
     status,
     user,
-    signin,
+    login,
+    logout,
     token,
-    signout,
   };
 };

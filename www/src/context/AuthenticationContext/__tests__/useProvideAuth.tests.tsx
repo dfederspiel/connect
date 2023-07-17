@@ -47,8 +47,8 @@ describe('the auth hook', () => {
     } as AccountInfo;
     act(() => {
       const { result } = renderHook(() => useProvideAuth(authModule));
-      result.current.signin();
-      result.current.signin();
+      result.current.login();
+      result.current.login();
       expect(spy).toHaveBeenCalledTimes(2);
     });
   });
@@ -65,7 +65,7 @@ describe('the auth hook', () => {
     } as AccountInfo;
     act(() => {
       const { result } = renderHook(() => useProvideAuth(authModule));
-      result.current.signout();
+      result.current.logout();
       expect(spy).toHaveBeenCalledTimes(1);
     });
   });

@@ -11,7 +11,7 @@ const User = (): JSX.Element => {
         {!auth.user && (
           <Button
             onClick={() => {
-              auth.signin();
+              auth.login();
             }}
           >
             Login
@@ -20,7 +20,7 @@ const User = (): JSX.Element => {
         {auth.user && (
           <Button
             onClick={() => {
-              auth.signout();
+              auth.logout();
             }}
           >
             Logout

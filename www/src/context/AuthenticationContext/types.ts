@@ -13,8 +13,8 @@ type UserProfile = {
 type AuthContext = {
   status: AuthStatus;
   user: string | undefined;
-  signin(): void;
-  signout(): void;
+  login(): void;
+  logout(): void;
   token(): Promise<string | null>;
 };
 

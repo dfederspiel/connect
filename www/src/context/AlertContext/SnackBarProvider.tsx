@@ -3,7 +3,7 @@ import { SnackBarType } from './SnackBarType';
 import { Snackbar } from '@mui/material';
 
 const snackBarContext = createContext<SnackBarType>(null as unknown as SnackBarType);
-interface SnackBarProviderProps {
+export interface SnackBarProviderProps {
   children: JSX.Element;
   timeout: number;
 }

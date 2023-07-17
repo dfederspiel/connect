@@ -1,9 +1,9 @@
 import { waitFor } from '@testing-library/react';
 import { renderHook, act } from '@testing-library/react-hooks';
-import { SnackBarProvider, useSnacks } from '../SnackBarProvider';
+import { SnackBarProvider, SnackBarProviderProps, useSnacks } from '../SnackBarProvider';
 
 describe('the toast provider', () => {
-  const wrapper = ({ children }: any) => (
+  const wrapper = ({ children }: SnackBarProviderProps) => (
     <SnackBarProvider timeout={100}>{children}</SnackBarProvider>
   );
   it('exists', async () => {
