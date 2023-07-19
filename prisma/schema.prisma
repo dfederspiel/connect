@@ -14,8 +14,8 @@ model User {
   domain String?
 
   Profile Profile?
-  Session Session?
-  Event   Event?
+  sessions Session[]
+  events   Event[]
 }
 
 model Profile {

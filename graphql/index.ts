@@ -5,6 +5,7 @@ import { useServer } from 'graphql-ws/lib/use/ws';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { WebSocketServer } from 'ws';
+import crypto from 'crypto';
 
 import { PrismaClient, User } from '@prisma/client';
 
@@ -24,6 +25,8 @@ export interface ApolloContext {
   user: User;
   dataSources: IDataSources;
 }
+
+const connections: Record<string, { token: string; hits: number; swaps: number }> = {};
 
 (async () => {
   const port = process.env.PORT || 4000;
@@ -83,17 +86,63 @@ export interface ApolloContext {
     useServer(
       {
         schema,
+        onConnect(ctx) {
+          ctx?.extra?.socket?.on('message', (data) => {
+            const payload = JSON.parse(data.toString());
+            const token = ctx?.connectionParams?.authorization as string | undefined;
+            if (token && payload?.type === 'ping' && payload?.payload?.token) {
+              console.log('PING WITH TOKEN');
+              const connectionId = crypto.createHash('sha1').update(token).digest('hex');
+              const newTokenHash = crypto
+                .createHash('sha1')
+                .update(payload?.payload?.token)
+                .digest('hex');
+              if (connections[connectionId]) {
+                const x = connections[connectionId];
+                connections[connectionId] = {
+                  token: payload?.payload?.token,
+                  swaps: connectionId !== newTokenHash ? x.swaps + 1 : x.swaps,
+                  hits: x.hits + 1,
+                };
+                ctx?.extra?.socket?.send(
+                  JSON.stringify({
+                    type: 'connection_ack',
+                    payload: connections[connectionId],
+                  }),
+                );
+              } else {
+                throw 'This should not happen';
+              }
+              for (const x in connections) {
+                const y = connections[x];
+                console.log(`hits:\t${y.hits}\nswaps:\t${y.swaps}\nhash:\t${x}\n\n`);
+              }
+            }
+          });
+        },
+        onError: (ctx, message) => {
+          console.log('ERROR', message);
+        },
         context: async (ctx) => {
           const token = ctx?.connectionParams?.authorization as string | undefined;
+
           let user;
           if (token) {
+            const connectionId = crypto.createHash('sha1').update(token).digest('hex');
+            console.log('CONTEXT', connectionId);
+
+            if (!connections[connectionId]) {
+              connections[connectionId] = { token, hits: 0, swaps: 0 };
+            }
+
             try {
-              const decoded = await authContext.decode(token);
+              const decoded = await authContext.decode(connections[connectionId].token);
               user = await authContext.getUser(decoded);
             } catch (ex) {
               console.error('[X0001]', ex);
             }
           }
+
           return {
             pubsub,
             user,

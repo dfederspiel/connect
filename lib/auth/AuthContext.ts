@@ -38,7 +38,6 @@ export class AuthContext {
       const jwtHeader = JSON.parse(
         Buffer.from(token.split('.')[0], 'base64').toString('utf8'),
       ) as any;
-      console.log(jwtHeader);
       client.getSigningKey(jwtHeader.kid, async (err, key) => {
         if (err != null) {
           console.log('err:' + err);

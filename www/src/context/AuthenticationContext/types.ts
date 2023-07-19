@@ -15,7 +15,7 @@ type AuthContext = {
   user: string | undefined;
   login(): void;
   logout(): void;
-  token(): Promise<string | null>;
+  token(forceRefresh: boolean): Promise<string | null>;
 };
 
 export type { AuthContext, Policy, UserProfile };

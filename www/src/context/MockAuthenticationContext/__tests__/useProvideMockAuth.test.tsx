@@ -45,7 +45,7 @@ describe('the mocked provider hook', () => {
       wrapper,
     });
     expect(result.current.token).toBeDefined();
-    expect(await result.current.token()).toEqual('123');
+    expect(await result.current.token(false)).toEqual('123');
   });
 
   it('can sign in', async () => {

@@ -41,5 +41,4 @@ export const MSAL_CONFIG: Configuration = {
 
 export const LOGIN_REQUEST = {
   scopes: ['openid', 'offline_access', process.env.B2C_SCOPE],
-  forceRefresh: false,
 };

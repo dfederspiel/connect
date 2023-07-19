@@ -27,7 +27,7 @@ export const useProvideAuth = (auth: AuthModule): AuthContext => {
 
   const token = async (): Promise<string | null> => {
     try {
-      const response = await auth.token();
+      const response = await auth.token(false);
       return response;
     } catch (ex) {
       return null;
