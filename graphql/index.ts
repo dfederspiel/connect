@@ -5,9 +5,8 @@ import { useServer } from 'graphql-ws/lib/use/ws';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { WebSocketServer } from 'ws';
-import crypto from 'crypto';
 
-import { PrismaClient, User } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
 import { typeDefs } from './src/schema/typeDefs.generated';
 import { resolvers } from './src/schema/resolvers.generated';
@@ -15,30 +14,13 @@ import { ApolloServer } from 'apollo-server-express';
 import UserDataContext from '@lib/auth/UserDataContext';
 import { AuthContext } from '@lib/auth/AuthContext';
 import UserDataSource from 'src/datasources/UsersDataSource';
+import { ApolloContext, ConnectionRef } from './src/lib/types';
+import { checkAndUpdateConnectionRefCache, validateAndRetrieveUser } from './src/helpers';
 
-export interface IDataSources {
-  userApi: UserDataSource;
-}
-
-export interface ApolloContext {
-  pubsub: RedisPubSub;
-  user: User;
-  dataSources: IDataSources;
-}
-
-const CACHE_PURGE_INTERVAL = 60 * 1000; // every 60 seconds
-
-let connections: Record<
-  string,
-  {
-    token: string;
-    hits: number;
-    swaps: number;
-    updated: number;
-  }
-> = {};
+const CACHE_PURGE_INTERVAL = 5000; // 60 * 1000; // every 60 seconds
 
 (async () => {
+  let connections: ConnectionRef = {};
   const port = process.env.PORT || 4000;
 
   const app = express();
@@ -83,6 +65,14 @@ let connections: Record<
     userApi: new UserDataSource(new UserDataContext(client)),
   };
 
+  const purgeStaleConnectionRefs = () => {
+    const currentTime = Date.now();
+    const filteredConnections = Object.entries(connections).filter(([, value]) => {
+      return currentTime - value.updated <= 1 * 60 * 60 * 1000; // tokens less than 60 minutes TTL
+    });
+    connections = Object.fromEntries(filteredConnections);
+  };
+
   httpServer.listen(port, () => {
     const wsServer = new WebSocketServer({
       server: httpServer,
@@ -93,14 +83,7 @@ let connections: Record<
       console.log('CONNECTION CLOSED');
     });
 
-    setInterval(() => {
-      const currentTime = Date.now();
-      const filteredConnections = Object.entries(connections).filter(([, value]) => {
-        return currentTime - value.updated <= 1 * 60 * 60 * 1000;
-      });
-
-      connections = Object.fromEntries(filteredConnections);
-    }, CACHE_PURGE_INTERVAL);
+    setInterval(() => purgeStaleConnectionRefs(), CACHE_PURGE_INTERVAL);
 
     useServer(
       {
@@ -110,33 +93,27 @@ let connections: Record<
             const payload = JSON.parse(data.toString());
             const token = ctx?.connectionParams?.authorization as string | undefined;
             if (token && payload?.type === 'ping' && payload?.payload?.token) {
-              console.log('PING WITH TOKEN');
-              const connectionId = crypto.createHash('sha1').update(token).digest('hex');
-              const newTokenHash = crypto
-                .createHash('sha1')
-                .update(payload?.payload?.token)
-                .digest('hex');
-              if (connections[connectionId]) {
-                const x = connections[connectionId];
-                connections[connectionId] = {
-                  token: payload?.payload?.token,
-                  swaps: connectionId !== newTokenHash ? x.swaps + 1 : x.swaps,
-                  hits: x.hits + 1,
-                  updated: connectionId === newTokenHash ? x.updated : Date.now(),
-                };
-                ctx?.extra?.socket?.send(
-                  JSON.stringify({
-                    type: 'connection_ack',
-                    payload: connections[connectionId],
-                  }),
-                );
-              } else {
-                throw 'This should not happen';
-              }
+              const { connectionId, connectionRefs } = checkAndUpdateConnectionRefCache(
+                token,
+                payload,
+                connections,
+              );
+              connections = connectionRefs;
+              console.log('CONNECTIONS');
               for (const x in connections) {
                 const y = connections[x];
-                console.log(`hits:\t${y.hits}\nswaps:\t${y.swaps}\nhash:\t${x}\n\n`);
+                console.log(
+                  `[${x}] hits: ${y.hits}\tswaps: ${y.swaps}\tage: ${
+                    Date.now() - y.updated
+                  }`,
+                );
               }
+              ctx?.extra?.socket?.send(
+                JSON.stringify({
+                  type: 'connection_ack',
+                  payload: connections[connectionId],
+                }),
+              );
             }
           });
         },
@@ -145,29 +122,7 @@ let connections: Record<
         },
         context: async (ctx) => {
           const token = ctx?.connectionParams?.authorization as string | undefined;
-
-          let user;
-          if (token) {
-            const connectionId = crypto.createHash('sha1').update(token).digest('hex');
-            console.log('CONTEXT', connectionId);
-
-            if (!connections[connectionId]) {
-              connections[connectionId] = {
-                token,
-                hits: 0,
-                swaps: 0,
-                updated: Date.now(),
-              };
-            }
-
-            try {
-              const decoded = await authContext.decode(connections[connectionId].token);
-              user = await authContext.getUser(decoded);
-            } catch (ex) {
-              console.error('[X0001]', ex);
-            }
-          }
-
+          const user = await validateAndRetrieveUser(token, authContext, connections);
           return {
             pubsub,
             user,
@@ -182,3 +137,53 @@ let connections: Record<
     );
   });
 })();
+
+// async function validateAndRetrieveUser(
+//   token: string | undefined,
+//   authContext: AuthContext,
+//   connections: ConnectionRef,
+// ) {
+//   if (token) {
+//     const connectionId = crypto.createHash('sha1').update(token).digest('hex');
+//     console.log('CONTEXT', connectionId);
+
+//     if (!connections[connectionId]) {
+//       connections[connectionId] = {
+//         token,
+//         hits: 0,
+//         swaps: 0,
+//         updated: Date.now(),
+//       };
+//     }
+
+//     try {
+//       const decoded = await authContext.decode(connections[connectionId].token);
+//       const user = await authContext.getUser(decoded);
+//       return user;
+//     } catch (ex) {
+//       console.error('[X0001]', ex);
+//     }
+//   }
+// }
+
+// function checkAndUpdateConnectionRefCache(
+//   token: string,
+//   message: { payload: { token: string } },
+//   connectionRefs: ConnectionRef,
+// ) {
+//   const connectionId = crypto.createHash('sha1').update(token).digest('hex');
+//   const newTokenHash = crypto
+//     .createHash('sha1')
+//     .update(message?.payload?.token)
+//     .digest('hex');
+//   if (connectionRefs[connectionId]) {
+//     const connection = connectionRefs[connectionId];
+//     connectionRefs[connectionId] = {
+//       token: message?.payload?.token,
+//       swaps: connectionId !== newTokenHash ? connection.swaps + 1 : connection.swaps,
+//       hits: connection.hits + 1,
+//       updated: connectionId === newTokenHash ? connection.updated : Date.now(),
+//     };
+//   }
+//   return { connectionId, connectionRefs };
+// }

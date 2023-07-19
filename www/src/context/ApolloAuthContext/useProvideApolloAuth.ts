@@ -20,6 +20,7 @@ export const useProvideApolloAuth = (): ApolloAuthContext | undefined => {
   let socket: WebSocket | null = null;
   const link = new GraphQLWsLink(
     createClient({
+      retryAttempts: 10,
       url: `${protocol === 'https:' ? 'wss:' : 'ws:'}//${hostname}${portString}${
         process.env.APOLLO_HOST
       }`,
@@ -28,8 +29,8 @@ export const useProvideApolloAuth = (): ApolloAuthContext | undefined => {
         return { authorization: token, test: 'some_other_thing' };
       },
       on: {
-        closed: (event) => {
-          console.log('CLOSED', event);
+        closed: async (event) => {
+          console.log('CONNECTION CLOSED', event);
         },
         connected: async (currentSocket) => {
           socket = currentSocket as WebSocket;
@@ -47,14 +48,12 @@ export const useProvideApolloAuth = (): ApolloAuthContext | undefined => {
             } else {
               clearInterval(intervalId);
             }
-          }, 5 * 60 * 1000);
-
-          console.log('CONNECTED', socket);
+          }, 5000 /* 5 * 60 * 1000 */);
         },
       },
     }),
   );
-  console.log('HOW MANY TIMES');
+
   const client = new ApolloClient({
     link,
     cache: new InMemoryCache(),
