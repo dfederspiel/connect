@@ -26,7 +26,17 @@ export interface ApolloContext {
   dataSources: IDataSources;
 }
 
-const connections: Record<string, { token: string; hits: number; swaps: number }> = {};
+const CACHE_PURGE_INTERVAL = 60 * 1000; // every 60 seconds
+
+let connections: Record<
+  string,
+  {
+    token: string;
+    hits: number;
+    swaps: number;
+    updated: number;
+  }
+> = {};
 
 (async () => {
   const port = process.env.PORT || 4000;
@@ -83,6 +93,15 @@ const connections: Record<string, { token: string; hits: number; swaps: number }
       console.log('CONNECTION CLOSED');
     });
 
+    setInterval(() => {
+      const currentTime = Date.now();
+      const filteredConnections = Object.entries(connections).filter(([, value]) => {
+        return currentTime - value.updated <= 1 * 60 * 60 * 1000;
+      });
+
+      connections = Object.fromEntries(filteredConnections);
+    }, CACHE_PURGE_INTERVAL);
+
     useServer(
       {
         schema,
@@ -103,6 +122,7 @@ const connections: Record<string, { token: string; hits: number; swaps: number }
                   token: payload?.payload?.token,
                   swaps: connectionId !== newTokenHash ? x.swaps + 1 : x.swaps,
                   hits: x.hits + 1,
+                  updated: connectionId === newTokenHash ? x.updated : Date.now(),
                 };
                 ctx?.extra?.socket?.send(
                   JSON.stringify({
@@ -132,7 +152,12 @@ const connections: Record<string, { token: string; hits: number; swaps: number }
             console.log('CONTEXT', connectionId);
 
             if (!connections[connectionId]) {
-              connections[connectionId] = { token, hits: 0, swaps: 0 };
+              connections[connectionId] = {
+                token,
+                hits: 0,
+                swaps: 0,
+                updated: Date.now(),
+              };
             }
 
             try {
