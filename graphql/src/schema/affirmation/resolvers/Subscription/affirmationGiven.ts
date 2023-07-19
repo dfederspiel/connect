@@ -5,7 +5,7 @@ export const affirmationGiven: NonNullable<SubscriptionResolvers['affirmationGiv
   resolve: (payload) => {
     return { ...payload, ...{ to: 'analyze and change the payload if desired' } };
   },
-  subscribe: (payload, _args, { user, pubsub }) => {
+  subscribe: (_, _args, { user, pubsub }) => {
     return {
       [Symbol.asyncIterator]() {
         return {
@@ -25,11 +25,4 @@ export const affirmationGiven: NonNullable<SubscriptionResolvers['affirmationGiv
       },
     };
   },
-  // subscribe: withFilter(
-  //   () => this.pubsub.asyncIterator(AFFIRMATION_GIVEN),
-  //   (payload, _args, context) => {
-  //     console.log('WEBSOCKET SUBSCRIBE', payload, _args, context);
-  //     return payload.to === context.user.id;
-  //   },
-  // ),
 };
