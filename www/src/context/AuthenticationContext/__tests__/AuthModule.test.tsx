@@ -71,7 +71,7 @@ describe('the auth module', () => {
       it('will return null for token', async () => {
         const authModule = new AuthModule(Mode.Client);
         expect(authModule.token).toBeDefined();
-        const token = await authModule.token();
+        const token = await authModule.token(false);
         expect(token).toBeNull();
       });
     });
@@ -91,7 +91,7 @@ describe('the auth module', () => {
           username: 'a@b.c',
         } as AccountInfo;
         expect(authModule.token).toBeDefined();
-        const token = await authModule.token();
+        const token = await authModule.token(false);
         expect(token).toBeDefined();
         expect(token).toEqual('123');
       });
@@ -109,8 +109,8 @@ describe('the auth module', () => {
 
         expect(authModule.token).toBeDefined();
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        const token = await authModule.token().catch(() => {});
-        expect(token).toBeNull();
+        const token = await authModule.token(false).catch(() => {});
+        expect(token).toBeUndefined();
       });
     });
   });
