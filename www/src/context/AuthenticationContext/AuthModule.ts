@@ -65,33 +65,35 @@ export class AuthModule {
       });
   }
 
-  async token(): Promise<string | null> {
+  async token(forceRefresh: boolean): Promise<string | null> {
     if (!this.account) return null;
 
-    return this.client
-      .acquireTokenSilent({
-        account: this.account,
-        ...LOGIN_REQUEST,
-        authority: `${process.env.B2C_AUTHORITY}/${process.env.B2C_LOGIN_POLICY}`,
-      } as SilentRequest)
-      .then((result) => {
-        if (!result.accessToken || result.accessToken === '') {
-          throw new InteractionRequiredAuthError();
-        }
-        return result.accessToken;
-      })
-      .catch(() => {
-        this.client
-          .acquireTokenRedirect({
-            account: this.account,
-            ...LOGIN_REQUEST,
-            authority: `${process.env.B2C_AUTHORITY}/${process.env.B2C_LOGIN_POLICY}`,
-          } as RedirectRequest)
-          .catch((ex) => {
-            console.log(ex);
-          });
-        return null;
-      });
+    return new Promise((resolve, reject) => {
+      this.client
+        .acquireTokenSilent({
+          ...LOGIN_REQUEST,
+          forceRefresh,
+          account: this.account,
+          authority: `${process.env.B2C_AUTHORITY}/${process.env.B2C_LOGIN_POLICY}`,
+        } as SilentRequest)
+        .then((result) => {
+          if (!result.accessToken || result.accessToken === '') {
+            throw new InteractionRequiredAuthError();
+          }
+          resolve(result.accessToken);
+        })
+        .catch(() => {
+          this.client
+            .acquireTokenRedirect({
+              ...LOGIN_REQUEST,
+              account: this.account,
+              authority: `${process.env.B2C_AUTHORITY}/${process.env.B2C_LOGIN_POLICY}`,
+            } as RedirectRequest)
+            .catch((ex) => {
+              reject(ex);
+            });
+        });
+    });
   }
 
   async logout(): Promise<void> {

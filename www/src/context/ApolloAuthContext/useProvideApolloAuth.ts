@@ -1,16 +1,9 @@
-import {
-  ApolloClient,
-  ApolloLink,
-  FetchResult,
-  InMemoryCache,
-  Operation,
-} from '@apollo/client';
-import { Observable } from '@apollo/client/utilities';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { useAuth } from '../AuthenticationContext';
 import { ApolloAuthContext } from './types';
-import { createClient, ClientOptions, Client } from 'graphql-ws';
+import { createClient } from 'graphql-ws';
 import { AuthStatus } from '../AuthenticationContext/useProvideAuth';
-import { print } from 'graphql/language/printer';
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 
 export const useProvideApolloAuth = (): ApolloAuthContext | undefined => {
   const auth = useAuth();
@@ -19,39 +12,47 @@ export const useProvideApolloAuth = (): ApolloAuthContext | undefined => {
   const { hostname, port, protocol } = window.location;
   const portString = port !== '' ? `:${port}` : port;
 
-  class WebSocketLink extends ApolloLink {
-    private client: Client;
-
-    constructor(options: ClientOptions) {
-      super();
-      this.client = createClient(options);
-    }
-
-    public request(operation: Operation): Observable<FetchResult> {
-      return new Observable((sink) => {
-        return this.client.subscribe<FetchResult>(
-          { ...operation, query: print(operation.query) },
-          {
-            next: sink.next.bind(sink),
-            complete: sink.complete.bind(sink),
-            error: sink.error.bind(sink),
-          },
-        );
-      });
-    }
-  }
   console.log(
     // eslint-disable-next-line prettier/prettier
     `${protocol === 'https:' ? 'wss:' : 'ws:'}//${hostname}${portString}${process.env.APOLLO_HOST}`,
   );
-  const link = new WebSocketLink({
-    // eslint-disable-next-line prettier/prettier
-    url: `${protocol === 'https:' ? 'wss:' : 'ws:'}//${hostname}${portString}${process.env.APOLLO_HOST}`,
-    connectionParams: async () => {
-      const token = await auth.token();
-      return { authorization: token, test: 'some_other_thing' };
-    },
-  });
+
+  let socket: WebSocket | null = null;
+  const link = new GraphQLWsLink(
+    createClient({
+      retryAttempts: 10,
+      url: `${protocol === 'https:' ? 'wss:' : 'ws:'}//${hostname}${portString}${
+        process.env.APOLLO_HOST
+      }`,
+      connectionParams: async () => {
+        const token = await auth.token(false);
+        return { authorization: token, test: 'some_other_thing' };
+      },
+      on: {
+        closed: async (event) => {
+          console.log('CONNECTION CLOSED', event);
+        },
+        connected: async (currentSocket) => {
+          socket = currentSocket as WebSocket;
+          const intervalId = setInterval(async () => {
+            const token = await auth.token(true);
+            if (socket && socket.readyState === WebSocket.OPEN) {
+              socket.send(
+                JSON.stringify({
+                  type: 'ping',
+                  payload: {
+                    token: token,
+                  },
+                }),
+              );
+            } else {
+              clearInterval(intervalId);
+            }
+          }, 5 * 60 * 1000);
+        },
+      },
+    }),
+  );
 
   const client = new ApolloClient({
     link,

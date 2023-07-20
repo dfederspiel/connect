@@ -1,51 +1,39 @@
-import { gql, useMutation, useQuery } from '@apollo/client';
-import { User } from '@prisma/client';
-
-export const GET_USERS = gql`
-  {
-    users {
-      id
-      email
-    }
-  }
-`;
-
-export const SEND_AFFIRMATION = gql`
-  mutation sendAffirmation($userId: ID!) {
-    sendAffirmation(userId: $userId) {
-      from
-      to
-    }
-  }
-`;
+import { useMutation, useQuery } from '@apollo/client';
+import { GetUsersDocument, SendAffirmationDocument } from '../../gql/graphql';
+import { Button, Grid, Skeleton, Typography } from '@mui/material';
 
 const Affirmations = () => {
-  const { loading, error, data } = useQuery(GET_USERS);
-  const [sendAffirmation] = useMutation(SEND_AFFIRMATION);
+  const { loading, error, data } = useQuery(GetUsersDocument);
+  const [sendAffirmation] = useMutation(SendAffirmationDocument);
 
   return (
-    (loading && <div>Loading...</div>) ||
+    (loading && <Skeleton variant="rectangular" width={210} height={118} />) ||
     (error && <div>Error! {error.message}</div>) ||
-    (data &&
-      data.users.map((user: User) => {
-        return (
-          <div data-testid="user" key={user.id}>
-            <button
-              type="button"
-              onClick={() => {
-                sendAffirmation({
-                  variables: {
-                    userId: user.id,
-                  },
-                });
-              }}
-            >
-              Send
-            </button>
-            <div>{user.id}</div>
-          </div>
-        );
-      }))
+    (data?.users && (
+      <div className="users-list">
+        {data.users.map(
+          (user) =>
+            user && (
+              <Grid container data-testid="user" key={user.id}>
+                <Button
+                  variant="contained"
+                  type="button"
+                  onClick={() => {
+                    sendAffirmation({
+                      variables: {
+                        userId: user.id,
+                      },
+                    });
+                  }}
+                >
+                  Send
+                </Button>
+                <Typography>{user.email}</Typography>
+              </Grid>
+            ),
+        )}
+      </div>
+    )) || <>Unplanned Code Path</>
   );
 };
 

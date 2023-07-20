@@ -5,17 +5,10 @@ services:
   graphql:
     image: codefly.azurecr.io/graphql:latest
     environment:
-      DATABASE_URL: postgres://user:postgres@postgres:5432/db
+      DATABASE_URL: postgres://user:postgres@postgres:5432/connect
       B2C_AUTHORITY: https://codeflyb2c.b2clogin.com/codeflyb2c.onmicrosoft.com
       B2C_LOGIN_POLICY: B2C_1_CASpR
       REDIS_HOST: redis
-  api:
-    image: codefly.azurecr.io/api:latest
-    environment:
-      DATABASE_URL: postgres://user:postgres@postgres:5432/db
-      API_BASE_URL: http://localhost:3000
-      B2C_APPLICATION_ID: 2b08acb3-4c70-4b1f-8925-b00158883f1a
-      B2C_KNOWN_AUTHORITIES: codeflyb2c.b2clogin.com
   www:
     image: codefly.azurecr.io/www:latest
     ports:

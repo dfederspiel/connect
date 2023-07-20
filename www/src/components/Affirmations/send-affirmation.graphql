@@ -1,0 +1,6 @@
+mutation sendAffirmation($userId: ID!) {
+  sendAffirmation(userId: $userId) {
+    from
+    to
+  }
+}

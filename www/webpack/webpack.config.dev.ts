@@ -15,10 +15,6 @@ const config: Configuration = {
     historyApiFallback: true,
     hot: true,
     proxy: {
-      '/api': {
-        target: 'http://api:3000',
-        changeOrigin: true,
-      },
       '/graphql': {
         target: 'http://graphql:4000',
         changeOrigin: true,

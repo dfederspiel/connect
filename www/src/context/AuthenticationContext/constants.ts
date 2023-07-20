@@ -1,4 +1,4 @@
-import { Configuration, LogLevel } from '@azure/msal-browser';
+import { Configuration } from '@azure/msal-browser';
 
 export const MSAL_CONFIG: Configuration = {
   auth: {
@@ -41,5 +41,4 @@ export const MSAL_CONFIG: Configuration = {
 
 export const LOGIN_REQUEST = {
   scopes: ['openid', 'offline_access', process.env.B2C_SCOPE],
-  forceRefresh: false,
 };

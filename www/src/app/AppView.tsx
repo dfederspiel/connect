@@ -1,25 +1,25 @@
 import { useSubscription } from '@apollo/client';
-import {
-  Container,
-  Grid,
-  Typography,
-  AppBar,
-  Toolbar,
-  IconButton,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from '@material-ui/core';
-import HomeIcon from '@material-ui/icons/Home';
-import MenuIcon from '@material-ui/icons/Menu';
+import HomeIcon from '@mui/icons-material/Home';
+import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
 import { Link, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import HomePage from '../pages/Home';
 import User from '../components/User';
 import { useSnacks } from '../context/AlertContext/SnackBarProvider';
-import { AFFIRMATION_GIVEN_SUBSCRIPTION } from '../graphql/subscriptions';
+import { AffirmationGivenSubscriptionDocument } from '../gql/graphql';
+import {
+  AppBar,
+  Container,
+  Drawer,
+  Grid,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Toolbar,
+  Typography,
+} from '@mui/material';
 
 const AppView = (): JSX.Element => {
   const [open, setOpen] = useState(false);
@@ -34,12 +34,13 @@ const AppView = (): JSX.Element => {
 
   const snacks = useSnacks();
 
-  useSubscription(AFFIRMATION_GIVEN_SUBSCRIPTION, {
+  useSubscription(AffirmationGivenSubscriptionDocument, {
     onSubscriptionData: ({ subscriptionData }) => {
       console.log(subscriptionData);
       snacks.updateMessage('Affirmation Given!!');
     },
   });
+
   return (
     <Container>
       <AppBar position="fixed">
@@ -86,7 +87,7 @@ const AppView = (): JSX.Element => {
         </Router>
       </Grid>
       <Typography style={{ textAlign: 'center' }}>
-        Connect © 2022 created by David Federspiel
+        Connect © 2023 created by David Federspiel
       </Typography>
     </Container>
   );

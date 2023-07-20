@@ -9,6 +9,8 @@ module.exports = {
     'graphql/src/**/*.{js,jsx,ts,tsx}',
     'www/src/**/*.{js,jsx,ts,tsx}',
     '!**/node_modules/**',
+    '!www/src/gql/**/*.ts',
+    '!graphql/src/schema/*.generated.ts',
   ],
   moduleNameMapper: {
     '^@lib/(.*)$': '<rootDir>/lib/$1',

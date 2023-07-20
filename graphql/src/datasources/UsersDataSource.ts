@@ -1,5 +1,5 @@
+import { IUserDataContext } from '@lib/auth/types';
 import { User } from '@prisma/client';
-import { IUserDataContext } from '../data/UserDataContext';
 import { DataSource } from 'apollo-datasource';
 
 export default class UserDataSource extends DataSource {
@@ -9,13 +9,6 @@ export default class UserDataSource extends DataSource {
     this.context = context;
   }
 
-  getAll = async (): Promise<User[]> => {
-    const users = await this.context.getAll();
-    console.log('[USERS]', users);
-    return users;
-  };
-
-  getById = async (id: string): Promise<User | null> => {
-    return await this.context.get(id);
-  };
+  getAll = async (): Promise<User[]> => this.context.getAll();
+  getById = async (id: string): Promise<User | null> => this.context.get(id);
 }

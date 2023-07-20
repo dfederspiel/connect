@@ -1,10 +1,10 @@
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import Affirmations from '../components/Affirmations/Affirmations';
 
 const HomePage = () => {
   return (
     <>
-      <Typography variant={'h2'}>Home</Typography>
+      <Typography variant={'h3'}>Home</Typography>
       <Affirmations />
     </>
   );

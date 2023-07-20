@@ -1,10 +1,5 @@
-import { IDataContext } from '../lib/types';
+import { IUserDataContext } from '@lib/auth/types';
 import { PrismaClient, User } from '@prisma/client';
-
-export interface IUserDataContext extends IDataContext<User> {
-  getByEmail(email: string): Promise<User | null>;
-  createUser(email?: string): Promise<User>;
-}
 
 export default class UserDataContext implements IUserDataContext {
   client: PrismaClient;
@@ -14,7 +9,7 @@ export default class UserDataContext implements IUserDataContext {
   }
 
   async createUser(email: string): Promise<User> {
-    return await this.client.user.create({
+    return this.client.user.create({
       data: {
         email: email,
       },
@@ -22,7 +17,7 @@ export default class UserDataContext implements IUserDataContext {
   }
 
   async getByEmail(email: string): Promise<User | null> {
-    return await this.client.user.findUnique({
+    return this.client.user.findUnique({
       where: {
         email: email,
       },
@@ -30,17 +25,19 @@ export default class UserDataContext implements IUserDataContext {
   }
 
   async getAll(): Promise<User[]> {
-    return await this.client.user.findMany();
+    return this.client.user.findMany();
   }
+
   async get(id: string): Promise<User | null> {
-    return await this.client.user.findUnique({
+    return this.client.user.findUnique({
       where: {
-        id: parseInt(id),
+        id,
       },
     });
   }
+
   async post(item: User): Promise<User> {
-    return await this.client.user.create({
+    return this.client.user.create({
       data: item,
     });
   }

@@ -13,9 +13,9 @@ type UserProfile = {
 type AuthContext = {
   status: AuthStatus;
   user: string | undefined;
-  signin(): void;
-  signout(): void;
-  token(): Promise<string | null>;
+  login(): void;
+  logout(): void;
+  token(forceRefresh: boolean): Promise<string | null>;
 };
 
 export type { AuthContext, Policy, UserProfile };

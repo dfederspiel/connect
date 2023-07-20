@@ -12,22 +12,22 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [16.x]
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - run: yarn install
-      - run: yarn setup
-      - run: yarn lint
-      - run: yarn test:ci
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./coverage/
+      - run: npm install
+      - run: npm run setup
+      - run: npm run lint
+      - run: npm run test:ci
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v2
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     directory: ./coverage/
   
   build-www:
     runs-on: ubuntu-latest
@@ -35,14 +35,8 @@ jobs:
       - uses: actions/checkout@main
       - run: docker build . -t codefly.azurecr.io/www:latest --file ./docker/www/Dockerfile
 
-  build-api:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@main
-      - run: docker build . -t codefly.azurecr.io/www:latest --file ./docker/api/Dockerfile
-
   build-graphql:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@main
-      - run: docker build . -t codefly.azurecr.io/www:latest --file ./docker/graphql/Dockerfile
+      - run: docker build . -t codefly.azurecr.io/graphql:latest --file ./docker/graphql/Dockerfile

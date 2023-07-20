@@ -1,5 +1,5 @@
+import { Button, Typography } from '@mui/material';
 import { useAuth } from '../context/AuthenticationContext';
-import { Typography, Button } from '@material-ui/core';
 
 const User = (): JSX.Element => {
   const auth = useAuth();
@@ -11,7 +11,7 @@ const User = (): JSX.Element => {
         {!auth.user && (
           <Button
             onClick={() => {
-              auth.signin();
+              auth.login();
             }}
           >
             Login
@@ -20,7 +20,7 @@ const User = (): JSX.Element => {
         {auth.user && (
           <Button
             onClick={() => {
-              auth.signout();
+              auth.logout();
             }}
           >
             Logout

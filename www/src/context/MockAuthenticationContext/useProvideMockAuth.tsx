@@ -10,18 +10,18 @@ export const useProvideMockAuth = (name?: string): AuthContext => {
 
   const status = AuthStatus.Authenticated;
 
-  const signin = async (): Promise<void> => {};
+  const login = async (): Promise<void> => {};
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  const signout = (): void => {};
+  const logout = (): void => {};
 
   const token = async (): Promise<string | null> => '123';
 
   return {
     status,
     user,
-    signin,
+    login,
+    logout,
     token,
-    signout,
   };
 };

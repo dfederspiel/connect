@@ -47,8 +47,8 @@ describe('the auth hook', () => {
     } as AccountInfo;
     act(() => {
       const { result } = renderHook(() => useProvideAuth(authModule));
-      result.current.signin();
-      result.current.signin();
+      result.current.login();
+      result.current.login();
       expect(spy).toHaveBeenCalledTimes(2);
     });
   });
@@ -65,7 +65,7 @@ describe('the auth hook', () => {
     } as AccountInfo;
     act(() => {
       const { result } = renderHook(() => useProvideAuth(authModule));
-      result.current.signout();
+      result.current.logout();
       expect(spy).toHaveBeenCalledTimes(1);
     });
   });
@@ -83,7 +83,7 @@ describe('the auth hook', () => {
     } as AccountInfo;
     await act(async () => {
       const { result } = renderHook(() => useProvideAuth(authModule));
-      const token = await result.current.token();
+      const token = await result.current.token(false);
       expect(token).toEqual('123');
       expect(spy).toHaveBeenCalledTimes(1);
     });
@@ -99,7 +99,7 @@ describe('the auth hook', () => {
       } as AccountInfo;
       await act(async () => {
         const { result } = renderHook(() => useProvideAuth(authModule));
-        const token = await result.current.token();
+        const token = await result.current.token(false);
         expect(token).toBeNull();
         expect(spy).toHaveBeenCalledTimes(1);
       });
