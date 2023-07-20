@@ -48,7 +48,7 @@ export const useProvideApolloAuth = (): ApolloAuthContext | undefined => {
             } else {
               clearInterval(intervalId);
             }
-          }, 5000 /* 5 * 60 * 1000 */);
+          }, 5 * 60 * 1000);
         },
       },
     }),

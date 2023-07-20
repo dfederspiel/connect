@@ -1,8 +1,8 @@
-import { User } from '@prisma/client';
+import { PrismaClient, User } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
-import { IUserDataContext } from './UserDataContext';
 import { NextFunction, Request, Response } from 'express';
+import { IUserDataContext } from './types';
 
 const client = jwksClient({
   jwksUri: `${process.env.B2C_AUTHORITY}/${process.env.B2C_LOGIN_POLICY}/discovery/v2.0/keys`,
@@ -20,13 +20,7 @@ export class AuthContext {
       try {
         if (!token) return null;
         const email = token.emails.length > 0 && token.emails[0];
-        this.context.getByEmail(email).then((user) => {
-          if (!user) {
-            this.context.createUser(email).then((user) => {
-              resolve(user);
-            });
-          } else resolve(user);
-        });
+        resolve(this.context.getByEmail(email));
       } catch (ex) {
         reject(ex);
       }

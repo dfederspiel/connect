@@ -1,5 +1,5 @@
+import { IUserDataContext } from '@lib/auth/types';
 import { User } from '@prisma/client';
-import { IUserDataContext } from '../data/UserDataContext';
 import { DataSource } from 'apollo-datasource';
 
 export default class UserDataSource extends DataSource {

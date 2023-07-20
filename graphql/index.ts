@@ -11,11 +11,11 @@ import { PrismaClient } from '@prisma/client';
 import { typeDefs } from './src/schema/typeDefs.generated';
 import { resolvers } from './src/schema/resolvers.generated';
 import { ApolloServer } from 'apollo-server-express';
-import UserDataContext from '@lib/auth/UserDataContext';
 import { AuthContext } from '@lib/auth/AuthContext';
 import UserDataSource from 'src/datasources/UsersDataSource';
 import { ApolloContext, ConnectionRef } from './src/lib/types';
 import { checkAndUpdateConnectionRefCache, validateAndRetrieveUser } from './src/helpers';
+import UserDataContext from './src/data/UserDataContext';
 
 const CACHE_PURGE_INTERVAL = 5000; // 60 * 1000; // every 60 seconds
 
@@ -88,7 +88,7 @@ const CACHE_PURGE_INTERVAL = 5000; // 60 * 1000; // every 60 seconds
     useServer(
       {
         schema,
-        onConnect(ctx) {
+        async onConnect(ctx) {
           ctx?.extra?.socket?.on('message', (data) => {
             const payload = JSON.parse(data.toString());
             const token = ctx?.connectionParams?.authorization as string | undefined;
@@ -116,6 +116,14 @@ const CACHE_PURGE_INTERVAL = 5000; // 60 * 1000; // every 60 seconds
               );
             }
           });
+
+          const token = ctx?.connectionParams?.authorization as string | undefined;
+          if (token) {
+            const decoded = await authContext.decode(token);
+            const user = await validateAndRetrieveUser(token, authContext, connections);
+            if (!user && decoded.emails.length > 0)
+              dataContext.createUser(decoded.emails[0]);
+          }
         },
         onError: (ctx, message) => {
           console.log('ERROR', message);
@@ -123,6 +131,7 @@ const CACHE_PURGE_INTERVAL = 5000; // 60 * 1000; // every 60 seconds
         context: async (ctx) => {
           const token = ctx?.connectionParams?.authorization as string | undefined;
           const user = await validateAndRetrieveUser(token, authContext, connections);
+
           return {
             pubsub,
             user,

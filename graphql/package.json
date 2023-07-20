@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "codegen": "npx graphql-codegen",
-    "start": "nodemon -r tsconfig-paths/register ./index.ts",
+    "start": "nodemon -r tsconfig-paths/register --watch index.ts --watch './src/*' --watch '../lib/*' ./index.ts",
     "start:production": "ts-node -r tsconfig-paths/register ./index.ts",
     "start:production:test": "nodemon -r tsconfig-paths/register ./test.index.ts",
     "prisma": "prisma generate --schema=../prisma/schema.prisma"

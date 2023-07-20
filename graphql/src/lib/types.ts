@@ -7,6 +7,12 @@ export interface IDataContext<T> {
   get(id: string): Promise<T | null>;
   post(item: T): Promise<T>;
 }
+
+export interface IUserDataContext extends IDataContext<User> {
+  getByEmail(email: string): Promise<User | null>;
+  createUser(email?: string): Promise<User>;
+}
+
 export interface IDataSources {
   userApi: UserDataSource;
 }
