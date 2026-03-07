@@ -1,20 +1,16 @@
-version: "3.3"
 services:
   redis:
-    image: "redis:latest"
+    image: "redis:7-alpine"
   graphql:
-    image: codefly.azurecr.io/graphql:latest
+    build:
+      context: .
+      dockerfile: docker/graphql/Dockerfile
     environment:
       DATABASE_URL: postgres://user:postgres@postgres:5432/connect
       B2C_AUTHORITY: https://codeflyb2c.b2clogin.com/codeflyb2c.onmicrosoft.com
       B2C_LOGIN_POLICY: B2C_1_CASpR
       REDIS_HOST: redis
-    build:
-      context: .
-      dockerfile: docker/graphql/Dockerfile
     depends_on:
-      - postgres
-    links: 
       - postgres
     volumes:
       - ./prisma:/usr/src/app/prisma
@@ -25,7 +21,6 @@ services:
       - 8080:4000
     command: [bash, -c, "cd graphql && npm start"]
   www:
-    image: codefly.azurecr.io/www:latest
     build:
       context: .
       dockerfile: docker/www/Dockerfile
@@ -33,29 +28,26 @@ services:
       - ./www/src:/usr/src/app/www/src
     ports:
       - 80:80
-    links:
-      - graphql
     depends_on:
       - graphql
     command: [bash, -c, "cd www && npm start -- --port=80"]
   postgres:
-    image: codefly.azurecr.io/postgres:latest
+    image: postgres:16-alpine
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: db
-    build:
-      context: .
-      dockerfile: docker/postgres/Dockerfile
     ports:
       - 5432:5432
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5432"]
+      test: ["CMD-SHELL", "pg_isready -U user"]
       interval: 30s
       timeout: 10s
       retries: 5
   pgadmin:
     image: dpage/pgadmin4:latest
+    profiles:
+      - tools
     environment:
       PGADMIN_DEFAULT_EMAIL: david@codefly.ninja
       PGADMIN_DEFAULT_PASSWORD: postgres
